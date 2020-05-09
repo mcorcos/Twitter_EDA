@@ -14,15 +14,19 @@
 
 #define FPS    60.0
 
-#define CUADRADITO_SIZE 20
-#define MOVE_RATE  4.0
-
 #define WIDTH 676   
 #define HEIGHT 281
 #define x_cuadrado 33
 #define y_cuadrado 47
 #define X 82
 #define Y 94
+
+#define isAlpha(a)  ( ( ('a'<= (a)) && ('z' >= (a)) ) || ( ('A'<= (a)) && ('Z' >= (a)) ) )
+#define isUpper(a)  ( ('A'<= (a)) && ('Z' >= (a)) )
+#define isNum(a)     ( ('0'<= (a)) && ('9' >= (a)) )
+
+
+
 
 ALLEGRO_DISPLAY* display;  //punteros que apuntan a un estructuras de allegro, se los apuntan a NULL para controlar errores
 ALLEGRO_BITMAP* lcd;
@@ -137,31 +141,28 @@ void update_board() { // funcion principal en el juego
         }
 
     }
-    al_draw_rectangle(0, 0, board_width * 100, board_height * 100, al_map_rgb(70, 70, 70), 3);
     al_flip_display();
 
 }
 
-void print_robot(double y, double x) {
-
-    int xp = (int)(x * 100);
-    int yp = (int)(y * 100);
-    al_draw_bitmap(robot_img, xp, yp, 0);
-    al_flip_display();
-}
 
 
 
 
-
-void chech_lcd(int x, int y) {
+void check_lcd(int x, int y) {
     
-    if(isAlpha(lcd[x][y])){
+    char c = lcd_chars[x][y];
 
-        drawAlpha(x, y);
+    if(isAlpha(c)){
 
+        if (isUpper(c)) {
+            drawAlpha(x, y);
+        }
+        else {
+            drawalpha(x, y);
+        }
     }
-    else(isNum(lcd[x][y])) {
+    if (isNum(c)) {
         
         drawNum(x, y);
 
@@ -172,7 +173,7 @@ void chech_lcd(int x, int y) {
 void drawalpha(int x, int y) {
     
     char alpha = lcd_chars[x][y];
-    alpha -= 97;
+    alpha -= 'a';
 
     al_draw_bitmap(al_bitmaps[alpha], X + x * x_cuadrado, Y + y * y_cuadrado, 0);
 
@@ -181,7 +182,7 @@ void drawalpha(int x, int y) {
 void drawAlpha(int x, int y) {
 
     char alpha = lcd_chars[x][y];
-    alpha -= 65;
+    alpha -= 'A';
 
     al_draw_bitmap(Al_bitmaps[alpha], X + x * x_cuadrado, Y + y * y_cuadrado, 0);
 
@@ -191,7 +192,7 @@ void drawAlpha(int x, int y) {
 void drawNum(int x, int y) {
 
     char Num = lcd_chars[x][y];
-    Num -= 48;
+    Num -= '0';
 
     al_draw_bitmap(Num_bitmaps[Num], X + x * x_cuadrado, Y + y * y_cuadrado, 0);
 
