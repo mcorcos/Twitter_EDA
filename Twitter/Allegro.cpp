@@ -1,4 +1,5 @@
 #include <iostream>
+#include "Allegro.h"
 
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_image.h>
@@ -29,19 +30,19 @@
 
 
 ALLEGRO_DISPLAY* display;  //punteros que apuntan a un estructuras de allegro, se los apuntan a NULL para controlar errores
-ALLEGRO_BITMAP* lcd;
+ALLEGRO_EVENT_QUEUE* event_queue;
+ALLEGRO_EVENT ev;
+
 ALLEGRO_BITMAP* Al_bitmaps[27];
 ALLEGRO_BITMAP* al_bitmaps[27];
 ALLEGRO_BITMAP* Num_bitmaps[9];
-ALLEGRO_EVENT_QUEUE* event_queue;
-
-ALLEGRO_EVENT ev;
-
 ALLEGRO_BITMAP* lcd = nullptr;
 
 int close_display = 0;
 
-char lcd_chars[16][16];
+char lcd_chars[16][16] = {
+   'H','O','L','A'
+};
 
 
 int inicializacion() {
@@ -76,8 +77,8 @@ int inicializacion() {
         fprintf(stderr, "failed to initialize font addon !\n");
         return -1;
     }
-
-    display = al_create_display(WIDTH,HEIGHT);
+    al_set_new_display_flags(ALLEGRO_OPENGL | ALLEGRO_WINDOWED);
+    display = al_create_display(676,281);
 
     //se crea el display
 
@@ -90,7 +91,7 @@ int inicializacion() {
         return -1;
     }
 
-    lcd = al_load_bitmap("lcd.png");
+    lcd = al_load_bitmap("lcd.bmp");
 
     if (!lcd) {
         fprintf(stderr, "failed to load image lcd !\n");
@@ -118,7 +119,7 @@ void close_window(void) { // funcion que desinstala los plugins de alegro
 
 
 
-    al_destroy_bitmap(imagen);       //se libera la memoria dinamica , destruyendo los elemntos usados
+    al_destroy_bitmap(lcd);       //se libera la memoria dinamica , destruyendo los elemntos usados
     al_destroy_display(display);
     al_destroy_event_queue(event_queue);
     al_shutdown_primitives_addon();
