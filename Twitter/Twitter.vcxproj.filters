@@ -41,5 +41,8 @@
     <ClInclude Include="..\..\..\..\Downloads\Twitter Example\Twitter Example\Project1\json.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="Allegro.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
