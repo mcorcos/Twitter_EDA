@@ -8,9 +8,10 @@ int main(void)
 	EDA_Client.getBearerToken();
 	while (searchingfortweets)
 	{
+		cout << "Donwloading Tweet ..." << endl;
 		searchingfortweets = EDA_Client.getTweets();
 	}
-	/*EDA_Client.displayTweets();*/
+	EDA_Client.displayTweets();
 	
 	return 0;
 }

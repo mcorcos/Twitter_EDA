@@ -73,63 +73,100 @@ bool Client::getBearerToken(void)
 
 bool Client::getTweets(void)
 {
-	json j;
-	easyHandler = curl_easy_init();
-	multiHandle = curl_multi_init();
-	readString = "";
-	stillRunning = 0;
-	if((easyHandler) && (multiHandle))
+	static bool firstTime = true;	//Para inicializar easy y multi handler una sola vez.
+	if (firstTime)
 	{
+		easyHandler = curl_easy_init();
+		multiHandle = curl_multi_init();
 		setTwitterOptions();
+		readString = "";
+		stillRunning = 0;
+		firstTime = false;
+	}
+	bool processState = true;
+	if ((easyHandler) && (multiHandle))
+	{
 		//Realizamos ahora un perform no bloqueante
 		curl_multi_perform(multiHandle, &stillRunning);
-		while (stillRunning)
+		if (stillRunning)
 		{
 			//Debemos hacer polling de la transferencia hasta que haya terminado
-			curl_multi_perform(multiHandle, &stillRunning);
-
-			//Mientras tanto podemos hacer otras cosas
-			//Si se cambia el while por if, se puede salir de aca y loopear afuera
+			multiError = curl_multi_perform(multiHandle, &stillRunning);
+			if (multiError != CURLE_OK)
+			{
+				curl_easy_cleanup(easyHandler);
+				curl_multi_cleanup(multiHandle);
+				cout << "Error al intentar recuperar tweets." << endl;
+				cerr << "curl_multi_perform() failed: " << curl_multi_strerror(multiError) << endl;
+				return 0;
+			}
+			processState = true;
 		}
 
 		//Checkeamos errores
-		if (easyError != CURLE_OK)
+		else
 		{
-			std::cerr << "curl_easy_perform() failed: " << curl_easy_strerror(easyError) << std::endl;
-			//Hacemos un clean up de curl antes de salir.
+			if (easyError != CURLE_OK)
+			{
+				cerr << "curl_easy_perform() failed: " << curl_easy_strerror(easyError) << endl;
+				//Hacemos un clean up de curl antes de salir.
+				curl_easy_cleanup(easyHandler);
+				curl_multi_cleanup(multiHandle);
+				return 0;
+			}
+			//Siempre realizamos el cleanup al final
 			curl_easy_cleanup(easyHandler);
-			return 0;
-		}
+			curl_multi_cleanup(multiHandle);
+			firstTime = true;
 
-		//Siempre realizamos el cleanup al final
-		curl_easy_cleanup(easyHandler);
-		curl_multi_cleanup(multiHandle);
+			//Si el request de CURL fue exitoso entonces twitter devuelve un JSON
+			//con toda la informacion de los tweets que le pedimos
+			json j = json::parse(readString);
 
-		//Si el request de CURL fue exitoso entonces twitter devuelve un JSON
-		//con toda la informacion de los tweets que le pedimos
-		j = json::parse(readString);
-		try
-		{
-			//Al ser el JSON un arreglo de objetos JSON se busca el campo text para cada elemento
-			for (auto element : j)
-				tweet_text.push_back(element["text"]);
-			printNames(tweet_text);
+			//Busco errores en el archivo json recuperado de twitter.
+			if (j.find("errors") != j.end())
+			{
+				for (auto codes : j["errors"])
+				{
+					if (codes["code"] == 34)
+					{
+						cout << "Usuario no válido" << endl;
+						return 0;
+					}
+				}
+				cout << "Error de json" << endl;
+				return 0;
+			}
 
-			//for (auto element : j)
-			//{
-			//		text_ = element["text"];
-			//		date_ = element["created at"];
-			//		/*text_ = element["text"].get<string>();
-			//		date_ = element["created at"].get<string>();*/
-			//		tweetList.emplace_back(Tweet(user, text_, date_));
-			//}
-			cout << "Tweets retrieved from Twitter account: " << user << endl;
+			//Guardo los campos del json que me interesan en mi vector de Tweets.
+			try
+			{
+				//Al ser el JSON un arreglo de objetos JSON se busca el campo text para cada elemento
+				/*for (auto element : j)
+					tweet_text.push_back(element["text"]);
+				printNames(tweet_text);*/
+
+				for (auto element : j)
+				{
+					text_ = element["text"];
+					date_ = element["created_at"];
+					int extended = text_.find("https");
+					text_ = text_.substr(0, extended);
+					text_.append("...");
+					/*text_ = element["text"].get<string>();
+					date_ = element["created at"].get<string>();*/
+					tweetList.emplace_back(Tweet(user, date_, text_));
+				}
+				/*cout << "Tweets retrieved from Twitter account: " << user << endl;*/
+			}
+			catch (std::exception& e)
+			{
+				//Muestro si hubo un error de la libreria
+				std::cerr << e.what() << std::endl;
+			}
+			processState = false;
 		}
-		catch (std::exception& e)
-		{
-			//Muestro si hubo un error de la libreria
-			std::cerr << e.what() << std::endl;
-		}
+		return processState;
 	}
 	else
 		std::cout << "Cannot download tweets. Unable to start cURL" << std::endl;
@@ -144,21 +181,23 @@ void Client::displayTweets(void)
 		cout << tweet_.getUser() << endl;
 		cout << tweet_.getDate() << endl;
 		cout << tweet_.getText() << endl;
-	}
-}
-
-void Client::printNames(list<string> names)
-{
-	for (auto c : names)
-	{
-		//Eliminamos el URL al final para mostrar
-		int extended = c.find("https");
-		c = c.substr(0, extended);
-		c.append("...");
-		std::cout << c << std::endl;
 		std::cout << "-----------------------------------------" << std::endl;
 	}
+	cout << "Tweets retrieved from Twitter account: " << user << endl;
 }
+
+//void Client::printNames(list<string> names)
+//{
+//	for (auto c : names)
+//	{
+//		//Eliminamos el URL al final para mostrar
+//		int extended = c.find("https");
+//		c = c.substr(0, extended);
+//		c.append("...");
+//		std::cout << c << std::endl;
+//		std::cout << "-----------------------------------------" << std::endl;
+//	}
+//}
 
 
 void Client::setTokenOptions(void)

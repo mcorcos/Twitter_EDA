@@ -20,7 +20,7 @@ public:
 	bool getBearerToken(void);
 	bool getTweets(void);
 	void displayTweets(void);
-	void printNames(list<string> names);
+	/*void printNames(list<string> names);*/
 
 private:
 	void setTokenOptions(void);
