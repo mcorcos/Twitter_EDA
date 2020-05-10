@@ -1,51 +1,30 @@
 #include <iostream>
 #include "Allegro.h"
 
-#include <allegro5/allegro.h>
-#include <allegro5/allegro_image.h>
-#include <allegro5/allegro_primitives.h> 
-#include <allegro5/allegro_color.h>
-#include <allegro5/allegro5.h>
-#include <allegro5/allegro_acodec.h>
-#include <allegro5/allegro_audio.h>
-#include <allegro5/allegro_native_dialog.h>
-#include <allegro5/allegro_font.h>
-#include <allegro5/allegro_ttf.h>
+
+#include <string>
 
 
 #define FPS    60.0
 
 #define WIDTH 676   
 #define HEIGHT 281
-#define x_cuadrado 33
+#define x_cuadrado 32
 #define y_cuadrado 47
 #define X 82
 #define Y 94
-
+#define LETRAS_ALPH 27
+#define NUMS 9
 #define isAlpha(a)  ( ( ('a'<= (a)) && ('z' >= (a)) ) || ( ('A'<= (a)) && ('Z' >= (a)) ) )
-#define isUpper(a)  ( ('A'<= (a)) && ('Z' >= (a)) )
 #define isNum(a)     ( ('0'<= (a)) && ('9' >= (a)) )
 
 
+Graphic::~Graphic()
+{
+}
 
 
-ALLEGRO_DISPLAY* display;  //punteros que apuntan a un estructuras de allegro, se los apuntan a NULL para controlar errores
-ALLEGRO_EVENT_QUEUE* event_queue;
-ALLEGRO_EVENT ev;
-
-ALLEGRO_BITMAP* Al_bitmaps[27];
-ALLEGRO_BITMAP* al_bitmaps[27];
-ALLEGRO_BITMAP* Num_bitmaps[9];
-ALLEGRO_BITMAP* lcd = nullptr;
-
-int close_display = 0;
-
-char lcd_chars[16][16] = {
-   'H','O','L','A'
-};
-
-
-int inicializacion() {
+int Graphic::inicializacion() {
 
 
 
@@ -77,6 +56,9 @@ int inicializacion() {
         fprintf(stderr, "failed to initialize font addon !\n");
         return -1;
     }
+
+
+
     al_set_new_display_flags(ALLEGRO_OPENGL | ALLEGRO_WINDOWED);
     display = al_create_display(676,281);
 
@@ -98,6 +80,9 @@ int inicializacion() {
         return -1;
     }
 
+
+    init_bitmaps();
+
     al_draw_bitmap(lcd,0,0,0);          //se pinta las dos caras del display con lcd 
     al_flip_display();
     al_draw_bitmap(lcd, 0, 0, 0);
@@ -106,16 +91,61 @@ int inicializacion() {
     return 0;
 }
 
-void erase_events(void) {
+
+
+
+
+
+
+
+
+
+
+
+void Graphic::erase_events(void) {
     al_flush_event_queue(event_queue);
+}
+
+void Graphic::init_bitmaps(void) {
+
+    using std::string;
+
+    string name = "fonts/letra_";
+    string tempstr;
+    char tempchar[30];
+
+
+    for (int i = 0; i < LETRAS_ALPH ; i++) {
+
+
+        char c = i + 'a';
+
+        tempstr = name + c + ".png";
+
+        char* filename = strcpy(tempchar, tempstr.c_str());
+        al_bitmaps[i] = al_load_bitmap(filename);
+        cout << filename << endl;
+        if (!al_bitmaps[i]) {
+            fprintf(stderr, "failed to load image al_bitmaps[%d] !\n",i);
+        }
+
+    }
+
+    name = "fonts/numero";
+
+    for (int i = 0; i < NUMS; i++) {
+
+        tempstr = name + std::to_string(i) + ".png";
+
+        char * filename = strcpy(tempchar, tempstr.c_str());
+        Num_bitmaps[i] = al_load_bitmap(filename);
+
+    }
 }
 
 
 
-
-
-
-void close_window(void) { // funcion que desinstala los plugins de alegro
+void Graphic::close_window(void) { // funcion que desinstala los plugins de alegro
 
 
 
@@ -128,12 +158,12 @@ void close_window(void) { // funcion que desinstala los plugins de alegro
 
 }
 
-void update_board() { // funcion principal en el juego
+void Graphic::update_board() { // funcion principal en el juego
                                                                                                          // esta funcion actualiza el floor y lo imprime en pantalla
 
     int i, j;
 
-    for (i = 0;i < 16;i++) {
+    for (i = 0;i < 2;i++) {
 
         for (j = 0;j < 16;j++) {
 
@@ -148,20 +178,13 @@ void update_board() { // funcion principal en el juego
 
 
 
-
-
-void check_lcd(int x, int y) {
+void Graphic::check_lcd(int x, int y) {
     
     char c = lcd_chars[x][y];
 
     if(isAlpha(c)){
 
-        if (isUpper(c)) {
-            drawAlpha(x, y);
-        }
-        else {
             drawalpha(x, y);
-        }
     }
     if (isNum(c)) {
         
@@ -171,26 +194,16 @@ void check_lcd(int x, int y) {
 }
 
 
-void drawalpha(int x, int y) {
-    
+void Graphic::drawalpha(int x, int y) {
     char alpha = lcd_chars[x][y];
-    alpha -= 'a';
-
-    al_draw_bitmap(al_bitmaps[alpha], X + x * x_cuadrado, Y + y * y_cuadrado, 0);
-
-}
-
-void drawAlpha(int x, int y) {
-
-    char alpha = lcd_chars[x][y];
-    alpha -= 'A';
-
-    al_draw_bitmap(Al_bitmaps[alpha], X + x * x_cuadrado, Y + y * y_cuadrado, 0);
+    int a = alpha - 'A';
+    al_draw_bitmap(al_bitmaps[a], X + y * x_cuadrado, Y + x * y_cuadrado, 0);
 
 }
 
 
-void drawNum(int x, int y) {
+
+void Graphic::drawNum(int x, int y) {
 
     char Num = lcd_chars[x][y];
     Num -= '0';
@@ -198,3 +211,14 @@ void drawNum(int x, int y) {
     al_draw_bitmap(Num_bitmaps[Num], X + x * x_cuadrado, Y + y * y_cuadrado, 0);
 
 }
+
+
+
+
+
+
+
+
+
+
+

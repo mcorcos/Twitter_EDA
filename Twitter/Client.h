@@ -3,7 +3,7 @@
 #include "Tweet.h"
 #include <curl/curl.h>
 #include <list>
-#include "C:\Users\Dell\source\repos\Twitter_EDA\Twitter\json.hpp"
+#include "json.hpp"
 #include <string>
 #include <vector>
 
