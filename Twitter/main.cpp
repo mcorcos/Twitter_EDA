@@ -8,6 +8,7 @@ int main(void)
 
 	BasicLCD* lcd = new AllegroLCD();
 
+
 	bool searchingfortweets = true;
 	Client EDA_Client("NicoTrozzo", 10);
 	EDA_Client.getBearerToken();
@@ -17,8 +18,11 @@ int main(void)
 		searchingfortweets = EDA_Client.getTweets();
 	}
 
+	while (1)
+		*lcd << 'H';
 	EDA_Client.displayTweets();
 	
+	delete lcd;
 	return 0;
 }
 

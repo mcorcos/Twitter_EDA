@@ -30,10 +30,10 @@
     <ClCompile Include="graphiclcd.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="BasicLCD.cpp">
+    <ClCompile Include="AllegroLCD.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="AllegroLCD.cpp">
+    <ClCompile Include="BasicLCD.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
