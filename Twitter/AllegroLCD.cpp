@@ -19,6 +19,10 @@ AllegroLCD::~AllegroLCD()
 		al_destroy_event_queue(event_queue);
 	}
 	al_shutdown_primitives_addon();
+
+	if (Timer)
+		al_destroy_timer(Timer);
+
 }
 
 bool AllegroLCD::lcdInitOK()
@@ -76,6 +80,17 @@ bool AllegroLCD::lcdInitOK()
 
 		return false;
 	}
+
+	// creo timer
+	Timer = al_create_timer(1 / FPS);
+	if (!Timer) {
+		return false;
+	}
+
+	// registro timer
+	al_register_event_source(event_queue, al_get_timer_event_source(Timer));
+	// start timer
+	al_start_timer(Timer);
 
 	lcd_simul = al_load_bitmap("lcd.bmp");
 

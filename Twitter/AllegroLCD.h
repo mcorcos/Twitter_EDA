@@ -62,6 +62,7 @@ public:
 private:
 
 	ALLEGRO_DISPLAY* display = nullptr;  //punteros que apuntan a un estructuras de allegro, se los apuntan a NULL para controlar errores
+	ALLEGRO_TIMER* Timer;
 	ALLEGRO_EVENT_QUEUE* event_queue;
 	ALLEGRO_EVENT ev;
 
