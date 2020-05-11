@@ -23,6 +23,9 @@ AllegroLCD::~AllegroLCD()
 
 bool AllegroLCD::lcdInitOK()
 {
+
+
+
 	if (!al_init()) {        //inicializacion general del allegro
 		fprintf(stderr, "error al inicializar el allegro\n");
 		return false;
@@ -163,7 +166,7 @@ void AllegroLCD::check_lcd(int x, int y)
 
 	if (isAlpha(c) || isNum(c)) {
 
-		lcd << c;
+		(*this) << c;
 	}
 }
 

@@ -25,6 +25,13 @@
 #define isAlpha(a)  ( ( ('a'<= (a)) && ('z' >= (a)) ) || ( ('A'<= (a)) && ('Z' >= (a)) ) )
 #define isNum(a)     ( ('0'<= (a)) && ('9' >= (a)) )
 
+struct cursorp {
+
+    int x;
+    int y;
+
+};
+
 #define FT_ok true
 #define FT_err false
 
@@ -39,12 +46,12 @@ public:
 	bool lcdGetError();
 	bool lcdMoveCursorUp();
 	bool lcdMoveCursorDown();
-	bool lcdMoveCursorRight();
-	bool lcdMoveCursorLeft();
-	bool lcdClearToEOL();
-	bool lcdClear();
-	bool lcdSetCursorPosition(const cursorP po);
-	cursorP lcdGetCusorPosition();
+	bool lcdMoveCursorRight() = 0;
+	bool lcdMoveCursorLeft() = 0;
+	bool lcdClearToEOL() = 0;
+	bool lcdClear() = 0;
+	bool lcdSetCursorPosition(const cursorP po) = 0;
+	//cursorP lcdGetCusorPosition() = 0;
 	AllegroLCD& operator<< (const unsigned char c);
 	AllegroLCD& operator<< (const unsigned char* c);
 	void update_board();
@@ -66,6 +73,6 @@ private:
 
 	int close_display = 0;
 	bool result;
-	char lcd_chars[2][16];
+	char lcd_chars[2][16] = { {'H'} };
 	int cadd;
 };

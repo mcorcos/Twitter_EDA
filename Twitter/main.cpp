@@ -4,6 +4,10 @@
 
 int main(void)
 {
+	//AllegroLCD displayLCD;
+
+	BasicLCD* lcd = new AllegroLCD();
+
 	bool searchingfortweets = true;
 	Client EDA_Client("NicoTrozzo", 10);
 	EDA_Client.getBearerToken();
@@ -12,6 +16,7 @@ int main(void)
 		cout << "Donwloading Tweet ..." << endl;
 		searchingfortweets = EDA_Client.getTweets();
 	}
+
 	EDA_Client.displayTweets();
 	
 	BasicLCD* lcd= new AllegroLCD;
