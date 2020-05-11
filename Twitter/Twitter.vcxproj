@@ -154,6 +154,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AllegroLCD.cpp" />
+    <ClCompile Include="BasicLCD.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="graphiclcd.cpp" />
     <ClCompile Include="main.cpp" />
@@ -164,6 +166,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\Downloads\Twitter Example\Twitter Example\Project1\json.hpp" />
+    <ClInclude Include="AllegroLCD.h" />
+    <ClInclude Include="BasicLCD.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="graphiclcd.h" />
     <ClInclude Include="Tweet.h" />
