@@ -25,18 +25,20 @@
 #define isAlpha(a)  ( ( ('a'<= (a)) && ('z' >= (a)) ) || ( ('A'<= (a)) && ('Z' >= (a)) ) )
 #define isNum(a)     ( ('0'<= (a)) && ('9' >= (a)) )
 
-struct cursorp {
 
-    int x;
-    int y;
-
-};
 
 #define FT_ok true
 #define FT_err false
 
 
 using namespace std;
+
+void update_board(BasicLCD* lcd);
+void check_lcd(BasicLCD* lcd,int x, int y);
+void loading(BasicLCD* lcd, int dowloadedTwts);
+
+
+
 
 class AllegroLCD : public BasicLCD {
 public:
@@ -54,10 +56,9 @@ public:
 	int lcdGetCusorPosition();
 	BasicLCD& operator<< (const unsigned char c);
 	BasicLCD& operator<< (const unsigned char* c);
-	void update_board();
-	void check_lcd(int x, int y);
-	void display_char(char c);
-	void display_chars(char* c);
+	void display_char(char c,int x , int y);
+	void display_chars(char* c, int x, int y);
+
 
 private:
 
@@ -74,6 +75,5 @@ private:
 
 	int close_display = 0;
 	bool result;
-	char lcd_chars[2][16] = { {'H'} };
 	int cadd;
 };

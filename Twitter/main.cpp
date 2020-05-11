@@ -7,19 +7,18 @@ int main(void)
 	//AllegroLCD displayLCD;
 
 	BasicLCD* lcd = new AllegroLCD();
-
+	int i = 1;
 
 	bool searchingfortweets = true;
 	Client EDA_Client("NicoTrozzo", 10);
 	EDA_Client.getBearerToken();
 	while (searchingfortweets)
 	{
-		cout << "Donwloading Tweet ..." << endl;
+		//cout << "Donwloading Tweet ..." << endl;
+		loading(lcd,i);
 		searchingfortweets = EDA_Client.getTweets();
+		i++;
 	}
-
-	while (1)
-		*lcd << 'H';
 	EDA_Client.displayTweets();
 	
 	delete lcd;

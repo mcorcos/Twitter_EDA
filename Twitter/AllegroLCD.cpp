@@ -1,5 +1,8 @@
 #include "AllegroLCD.h"
+#include "iostream"
 
+char lcd_chars[2][16];
+struct cursorP po;
 
 AllegroLCD::AllegroLCD()
 {
@@ -149,57 +152,66 @@ bool AllegroLCD::lcdMoveCursorDown()
 
 BasicLCD& AllegroLCD::operator<<(const unsigned char c)
 {
-	display_char(c);
+	std::cout << cadd << std::endl;
+	int pos, x, y;
+	pos = cadd - 1;
+	if (pos >= 16) {
+		x = pos - 16;
+	}
+	else {
+		x = pos;
+	}
+	if (pos >= 16) {
+		y=1;
+	}
+	else {
+		y=0;
+	}
+	display_char(c,x,y);
+	if (lcdMoveCursorRight()) {
+
+	}
+	else {
+		cadd = 1;
+	}
 	return *this;
 }
 
 BasicLCD& AllegroLCD::operator<<(const unsigned char * c)
 {
-	display_chars((char*)c);
+	//int x, y, pos;
+	//display_chars((char*)c,x,y);
 	return *this;
 }
 
-void AllegroLCD::update_board()
+void AllegroLCD::display_char(char c,int x, int y)
 {
-	int i, j;
-
-	for (i = 0; i < 2; i++) {
-
-		for (j = 0; j < 16; j++) {
-
-			check_lcd(i, j);
-
-		}
-
-	}
-	al_flip_display();
+	al_draw_text(font, al_color_name("black"), X + x*x_cuadrado, Y + y*y_cuadrado, 0, &c);
 }
 
-void AllegroLCD::check_lcd(int x, int y)
-{
-	const char c = lcd_chars[x][y];
-
-	if (isAlpha(c) || isNum(c)) {
-
-		(*this) << c;
-	}
-}
-
-void AllegroLCD::display_char(char c)
-{
-	al_draw_text(font, al_color_name("black"), 50, 40, 0, &c);
-}
-
-void AllegroLCD::display_chars(char * c)
+void AllegroLCD::display_chars(char* c, int x, int y)
 {
 	al_draw_text(font, al_color_name("black"), 50, 40, 0, c);
 }
 
+
 bool AllegroLCD::lcdMoveCursorRight() {
-	return true;
+	if (cadd != 32) {
+		cadd += 1;
+		return true;
+	}
+	else {
+		return false;
+	}
 }
 bool AllegroLCD::lcdMoveCursorLeft() {
-	return true;
+	if (cadd != 0 ) {
+		cadd -= 1;
+		return true;
+	}
+	else {
+		return false;
+	}
 }
 bool AllegroLCD::lcdClearToEOL() { 
 	return true;
@@ -208,10 +220,59 @@ bool AllegroLCD::lcdClear() {
 	return true;
 }
 bool AllegroLCD::lcdSetCursorPosition(const cursorP po) {
-	return true;
+
+	if (po.y > 0 && po.x > 0 && po.y <= 2 && po.x <= 16) {
+		cadd = (po.y - 1) * 16 + po.x;
+		return true;
+	}
+	else return false;
 }
 int AllegroLCD::lcdGetCusorPosition() {
 
 	return 6;
 }
+
+
+void loading(BasicLCD* lcd, int downloadedTwts) {
+
+
+	for (int j = 0;j < downloadedTwts;j++) {
+		lcd_chars[1][j] = '0';
+	}
+	update_board(lcd);
+	
+}
+
+
+void update_board(BasicLCD* lcd)
+{
+	int i, j;
+
+	for (i =0; i <= 2; i++) {
+
+		for (j = 0; j <= 16; j++) {
+			po.x = j+1;
+			po.y = i+1;
+			lcd->lcdSetCursorPosition(po);
+			check_lcd(lcd,i, j);
+
+		}
+
+	}
+	al_flip_display();
+}
+
+void check_lcd(BasicLCD* lcd,int x, int y)
+{
+	const char c = lcd_chars[x][y];
+
+	if (isAlpha(c) || isNum(c)) {
+		std::cout<< "escribo" << std::endl;
+		(*lcd) << c;
+	}
+	else {
+		*lcd << '*';
+	}
+}
+
 
