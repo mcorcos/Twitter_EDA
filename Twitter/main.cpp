@@ -5,22 +5,23 @@
 int main(void)
 {
 	//AllegroLCD displayLCD;
-
+	int tweet_count = 10, i = 1;
 	BasicLCD* lcd = new AllegroLCD();
-	int i = 1;
-
 	bool searchingfortweets = true;
-	Client EDA_Client("NicoTrozzo", 10);
+	Client EDA_Client("NicoTrozzo", tweet_count);
 	EDA_Client.getBearerToken();
+
 	while (searchingfortweets)
 	{
-		//cout << "Donwloading Tweet ..." << endl;
-		loading(lcd,i);
+
+		loading(lcd,10);
 		searchingfortweets = EDA_Client.getTweets();
-		i++;
+
 	}
+
 	EDA_Client.displayTweets();
-	
+
+
 	delete lcd;
 	return 0;
 }

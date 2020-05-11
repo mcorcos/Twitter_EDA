@@ -1,4 +1,5 @@
 #include "Client.h"
+#include "iostream"
 string text_, date_;
 using json = nlohmann::json;
 
@@ -222,6 +223,7 @@ void Client::displayTweets(void)
 		cout << tweet_.getUser() << endl;
 		cout << tweet_.getDate() << endl;
 		cout << tweet_.getText() << endl;
+
 		std::cout << "-----------------------------------------" << std::endl;
 	}
 	cout << "Tweets retrieved from Twitter account: " << user << endl;
@@ -315,3 +317,5 @@ size_t myCallback(void *contents, size_t size, size_t nmemb, void *userp)
 	s->append(data, realsize);
 	return realsize;						//recordar siempre devolver realsize
 }
+
+int Client::getvectorsize(void) { return tweetList.size(); };
