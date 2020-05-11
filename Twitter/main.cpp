@@ -1,5 +1,6 @@
 #include <iostream>
 #include "Client.h"
+#include "AllegroLCD.h"
 
 int main(void)
 {
@@ -13,6 +14,7 @@ int main(void)
 	}
 	EDA_Client.displayTweets();
 	
+	BasicLCD* lcd= new AllegroLCD;
 	return 0;
 }
 
