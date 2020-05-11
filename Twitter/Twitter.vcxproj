@@ -154,8 +154,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Allegro.cpp" />
     <ClCompile Include="Client.cpp" />
+    <ClCompile Include="graphiclcd.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Tweet.cpp" />
   </ItemGroup>
@@ -164,8 +164,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\Downloads\Twitter Example\Twitter Example\Project1\json.hpp" />
-    <ClInclude Include="Allegro.h" />
     <ClInclude Include="Client.h" />
+    <ClInclude Include="graphiclcd.h" />
     <ClInclude Include="Tweet.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -18,9 +18,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Allegro.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -28,6 +25,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Client.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="graphiclcd.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -41,7 +41,7 @@
     <ClInclude Include="..\..\..\..\Downloads\Twitter Example\Twitter Example\Project1\json.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="Allegro.h">
+    <ClInclude Include="graphiclcd.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
