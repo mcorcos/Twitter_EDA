@@ -14,11 +14,16 @@ size_t myCallback(void *contents, size_t size, size_t nmemb, void *userp);
 class Client
 {
 public:
+	Client();
 	Client(string user_, int numberofTweets_);
 	~Client();
 
 	bool getBearerToken(void);
 	bool getTweets(void);
+	vector<Tweet>& getTweetList(void);
+	void setUser(string user_);
+	void set_numberofTweets(int numberofTweets_);
+
 	void displayTweets(void);
 	/*void printNames(list<string> names);*/
 
