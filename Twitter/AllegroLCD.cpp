@@ -1,9 +1,9 @@
 #include "AllegroLCD.h"
 
 
-
 AllegroLCD::AllegroLCD()
 {
+	lcdInitOK();
 }
 
 
@@ -132,13 +132,13 @@ bool AllegroLCD::lcdMoveCursorDown()
 	}
 }
 
-AllegroLCD & AllegroLCD::operator<<(const unsigned char c)
+BasicLCD& AllegroLCD::operator<<(const unsigned char c)
 {
 	display_char(c);
 	return *this;
 }
 
-AllegroLCD & AllegroLCD::operator<<(const unsigned char * c)
+BasicLCD& AllegroLCD::operator<<(const unsigned char * c)
 {
 	display_chars((char*)c);
 	return *this;
@@ -180,5 +180,23 @@ void AllegroLCD::display_chars(char * c)
 	al_draw_text(font, al_color_name("black"), 50, 40, 0, c);
 }
 
+bool AllegroLCD::lcdMoveCursorRight() {
+	return true;
+}
+bool AllegroLCD::lcdMoveCursorLeft() {
+	return true;
+}
+bool AllegroLCD::lcdClearToEOL() { 
+	return true;
+}
+bool AllegroLCD::lcdClear() {
+	return true;
+}
+bool AllegroLCD::lcdSetCursorPosition(const cursorP po) {
+	return true;
+}
+int AllegroLCD::lcdGetCusorPosition() {
 
+	return 6;
+}
 

@@ -40,20 +40,20 @@ using namespace std;
 
 class AllegroLCD : public BasicLCD {
 public:
-	AllegroLCD();
-	~AllegroLCD();
-	bool lcdInitOK();
-	bool lcdGetError();
-	bool lcdMoveCursorUp();
-	bool lcdMoveCursorDown();
-	bool lcdMoveCursorRight() = 0;
-	bool lcdMoveCursorLeft() = 0;
-	bool lcdClearToEOL() = 0;
-	bool lcdClear() = 0;
-	bool lcdSetCursorPosition(const cursorP po) = 0;
-	//cursorP lcdGetCusorPosition() = 0;
-	AllegroLCD& operator<< (const unsigned char c);
-	AllegroLCD& operator<< (const unsigned char* c);
+	AllegroLCD(void);
+	~AllegroLCD(void);
+	virtual bool lcdInitOK();
+	virtual bool lcdGetError();
+	virtual bool lcdMoveCursorUp();
+	virtual bool lcdMoveCursorDown();
+	virtual bool lcdMoveCursorRight();
+	virtual bool lcdMoveCursorLeft();
+	virtual bool lcdClearToEOL();
+	virtual bool lcdClear();
+	virtual bool lcdSetCursorPosition(const cursorP po);
+	int lcdGetCusorPosition();
+	BasicLCD& operator<< (const unsigned char c);
+	BasicLCD& operator<< (const unsigned char* c);
 	void update_board();
 	void check_lcd(int x, int y);
 	void display_char(char c);
