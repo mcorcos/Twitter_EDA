@@ -1,8 +1,13 @@
 #include <iostream>
 #include "Client.h"
+#include "AllegroLCD.h"
 
 int main(void)
 {
+	//AllegroLCD displayLCD;
+
+	BasicLCD* lcd = new AllegroLCD();
+
 	bool searchingfortweets = true;
 	Client EDA_Client("NicoTrozzo", 10);
 	EDA_Client.getBearerToken();
@@ -11,6 +16,7 @@ int main(void)
 		cout << "Donwloading Tweet ..." << endl;
 		searchingfortweets = EDA_Client.getTweets();
 	}
+
 	EDA_Client.displayTweets();
 	
 	return 0;
