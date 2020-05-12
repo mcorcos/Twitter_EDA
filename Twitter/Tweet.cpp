@@ -1,4 +1,5 @@
 #include "Tweet.h"
+#include <vector>
 
 Tweet::Tweet(string user_, string date_, string text_)
 {
@@ -47,4 +48,35 @@ string find_chars(std::string text) {
 		found = 0;
 	}
 	return text;
+}
+std::string month_tonum(const std::string monthName)
+{
+	static const vector<std::string> months
+	{
+		{ "Jan"},
+		{ "Feb"},
+		{ "Mar"},
+		{ "Apr" },
+		{ "May"},
+		{ "Jun"},
+		{ "Jul"},
+		{ "Aug"},
+		{ "Sep"},
+		{ "Oct" },
+		{ "Nov"},
+		{ "Dec"}
+	};
+
+	std::string name = monthName;
+	int i;
+	for (i = 0; name.compare(months.at(i)) != 0;i++) {}
+
+	if (i < 10) {
+		string result = '0' + to_string(i);
+		return result;
+	}
+
+	else {
+		return to_string(i);
+	}
 }

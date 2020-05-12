@@ -39,7 +39,7 @@ bool AllegroLCD::lcdInitOK()
 		return false;
 	}
 
-	font = al_load_font("font.ttf", 34, 0);
+	font = al_load_font("font.ttf", 38, 0);
 
 	if (!font) {
 		fprintf(stderr, "failed to load font !\n");
@@ -295,7 +295,7 @@ void loading(BasicLCD* lcd, int downloadedTwts) {
 
 		lcd_chars[1][j] = '0';
 		if (j > 0) {
-			lcd_chars[1][j - 1] = '*';
+			lcd_chars[1][j - 1] = ' ';
 		}
 
 		al_rest(0.05);

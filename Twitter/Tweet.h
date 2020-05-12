@@ -3,6 +3,7 @@
 using namespace std;
 
 string find_chars(std::string text);
+std::string month_tonum(const std::string monthName);
 
 class Tweet
 {
