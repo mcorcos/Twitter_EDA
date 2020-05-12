@@ -108,17 +108,15 @@ ALLEGRO_EVENT Simulation::getEvent() {
 	return Event;
 }
 
-string parse_date(std::string usr_date) {
+void Simulation::setLCD(BasicLCD* lcd, int x, int y) {
+	
+	cursorP p;
+	p.x = x;
+	p.y = y;
 
-	string day, month, year, hs;
-	month.assign(usr_date, 4, 3);
-	day.assign(usr_date, 8, 2);
-	hs.assign(usr_date, 11, 5);
-	year.assign(usr_date, 28, 2);
-	usr_date = day + "/" + month + "/" + year + " - " + hs;
-
-	return usr_date;
+	lcd->lcdSetCursorPosition(p);
 }
+
 
 void Simulation::dispatch(int type) {
 
@@ -180,7 +178,7 @@ void Simulation::displayTweets(vector<Tweet> tweetList, BasicLCD* lcd) {
 			if (tweetSelect < tweet_select_upper_bound) {
 				user = (tweetList.at(tweetSelect)).getUser();
 				date = parse_date((tweetList.at(tweetSelect)).getDate());
-				message = user + ": - " + (tweetList.at(tweetSelect)).getText() + " -";
+				message = user + ": - " + (tweetList.at(tweetSelect)).getText() + "-";
 			}
 
 
@@ -214,20 +212,28 @@ void Simulation::displayTweets(vector<Tweet> tweetList, BasicLCD* lcd) {
 					message_to_16 = "No more tweets";
 					date = "";
 				}
-				p.x = 1;
-				p.y = 1;
 
-				lcd->lcdSetCursorPosition(p);
+				setLCD(lcd, 1, 1);
 				*lcd << (unsigned char*)date.c_str();
 
-				p.x = 1;
-				p.y = 2;
-				lcd->lcdSetCursorPosition(p);
+				setLCD(lcd, 1, 2);
 				*lcd << (unsigned char*)message_to_16.c_str();
 
-				sequence_counter++;
 				update_board(lcd);
+				sequence_counter++;
 			}
 		}
 	}
+}
+
+string parse_date(std::string usr_date) {
+
+	string day, month, year, hs;
+	month.assign(usr_date, 4, 3);
+	day.assign(usr_date, 8, 2);
+	hs.assign(usr_date, 11, 5);
+	year.assign(usr_date, 28, 2);
+	usr_date = day + "/" + month + "/" + year + " - " + hs;
+
+	return usr_date;
 }

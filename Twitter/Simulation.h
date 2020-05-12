@@ -19,23 +19,26 @@
 #define SPEED_HIGHER_LIMIT 100
 #define DEFAULT_SPEED 30
 
+string parse_date(std::string usr_date);
+
 class Simulation {
 public:
 	Simulation(
-		ALLEGRO_DISPLAY* display=nullptr,
-		ALLEGRO_TIMER*timer=nullptr,
-		ALLEGRO_EVENT_QUEUE* queue=nullptr
+		ALLEGRO_DISPLAY* display = nullptr,
+		ALLEGRO_TIMER* timer = nullptr,
+		ALLEGRO_EVENT_QUEUE* queue = nullptr
 	);
 	~Simulation();
 	bool initialize(void);
 	ALLEGRO_DISPLAY* getDisplay();
 	ALLEGRO_TIMER* getTimer();
 	ALLEGRO_EVENT getEvent();
-	void dispatch(int type);
-	int getNextEventType();
 	void displayTweets(vector<Tweet> tweetList, BasicLCD* lcd);
 
 private:
+	int getNextEventType();
+	void dispatch(int type);
+	void setLCD(BasicLCD* lcd, int x, int y);
 	ALLEGRO_DISPLAY* display;
 	ALLEGRO_TIMER* timer;
 	ALLEGRO_EVENT_QUEUE* queue;
