@@ -14,7 +14,7 @@
 #include "Tweet.h"
 #include "AllegroLCD.h"
 
-#define FPS    40.0
+#define FPS    60.0
 
 
 class Simulation {

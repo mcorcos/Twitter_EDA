@@ -108,9 +108,22 @@ ALLEGRO_EVENT Simulation::getEvent() {
 	return Event;
 }
 
+string parse_date(std::string usr_date) {
+
+	string day, month, year, hs;
+	month.assign(usr_date, 4, 3);
+	day.assign(usr_date, 8, 2);
+	hs.assign(usr_date, 11, 5);
+	year.assign(usr_date, 28, 2);
+	usr_date = day + "/" + month + "/" + year + " - " + hs;
+
+	return usr_date;
+}
+
 void Simulation::displayTweets(vector<Tweet> tweetList, BasicLCD* lcd) {
 
 	int tweetSelect = 0;
+	int speed = 30;
 	cursorP p;
 	p.x = 1;
 	p.y = 1;
@@ -126,23 +139,21 @@ void Simulation::displayTweets(vector<Tweet> tweetList, BasicLCD* lcd) {
 	update_board(lcd);
 	while (streamig && getNextEventType() != ALLEGRO_EVENT_DISPLAY_CLOSE) {
 		if (getNextEventType()) {
-			user = (tweetList.at(tweetSelect)).getUser();
-			date = (tweetList.at(tweetSelect)).getDate();
-			string joiner = ": - ";
-			string message = user + joiner + (tweetList.at(tweetSelect)).getText() + " -";
-			/*
-			string day = date.substr(date.find(' ',0,2)-1, date.find(' ', 0,3));
-			string month = date.substr(date.find(' ', 0), date.find(' ', 1)+1);
-			string year = date.substr(date.find(' ', 4), date.length());
-			string hh_mm = date.substr(date.find(' ', 2), date.find(':', 1));
-			cout << day+'/'+month+'/'+year+' '+'-'+' '+hh_mm;
-			*/
+			string message = "";
+			if (tweetSelect < tweetList.size()) {
+				user = (tweetList.at(tweetSelect)).getUser();
+				date = parse_date((tweetList.at(tweetSelect)).getDate());
+				message = user + ": - " + (tweetList.at(tweetSelect)).getText() + " -";
+			}
+
 			if (Event.type == ALLEGRO_EVENT_KEY_DOWN) {
 				if (Event.keyboard.keycode == ALLEGRO_KEY_RIGHT) {
-					tweetSelect++;
+					if (tweetSelect < tweetList.size()) {
+						tweetSelect++;
+					}
 					trimer = 0;
 				}
-				if (Event.keyboard.keycode == ALLEGRO_KEY_LEFT) {
+				else if (Event.keyboard.keycode == ALLEGRO_KEY_LEFT) {
 					if (tweetSelect != 0) {
 						tweetSelect--;
 						trimer = 0;
@@ -150,6 +161,16 @@ void Simulation::displayTweets(vector<Tweet> tweetList, BasicLCD* lcd) {
 					else {
 						tweetSelect = 0;
 						trimer = 0;
+					}
+				}
+				else if (Event.keyboard.keycode == ALLEGRO_KEY_UP) {
+					if (speed > 6) {
+						speed-=5;
+					}
+				}
+				else if (Event.keyboard.keycode == ALLEGRO_KEY_DOWN) {
+					if (speed < 100) {
+						speed+=5;
 					}
 				}
 			}
@@ -170,16 +191,30 @@ void Simulation::displayTweets(vector<Tweet> tweetList, BasicLCD* lcd) {
 				lcd->lcdSetCursorPosition(p);
 
 				// escribo autor y texto
-				if (!(timer % 40) && timer != 0) {
+				if (!(timer % speed) && timer != 0) {
 					trimer++;
 					if (trimer > message.length() - 16) {
 						trimer = 0;
-						tweetSelect++;
+						if (tweetSelect < tweetList.size()) {
+							tweetSelect++;
+						}
 					}
 					timer = 0;
 				}
-
-				string message_to_16 = message.substr(trimer);
+				string message_to_16;
+				if (tweetSelect < tweetList.size()) {
+					message_to_16 = message.substr(trimer);
+				}
+				else {
+					p.x = 1;
+					p.y = 1;
+					lcd->lcdSetCursorPosition(p);
+					*lcd << (unsigned char*)"";
+					p.x = 2;
+					p.y = 2;
+					lcd->lcdSetCursorPosition(p);
+					message_to_16 = "No more tweets";
+				}
 				*lcd << (unsigned char*)message_to_16.c_str();
 
 				timer++;
