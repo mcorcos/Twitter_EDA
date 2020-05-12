@@ -84,6 +84,7 @@ bool Simulation::initialize() {
 	else if (!al_install_keyboard()) {
 		res = false;
 	}
+	al_register_event_source(queue, al_get_keyboard_event_source());
 
 	return res;
 }
@@ -107,26 +108,83 @@ ALLEGRO_EVENT Simulation::getEvent() {
 	return Event;
 }
 
-void Simulation::displayTweets(vector<Tweet> tweetList) {
+void Simulation::displayTweets(vector<Tweet> tweetList, BasicLCD* lcd) {
 
+	int tweetSelect = 0;
+	cursorP p;
+	p.x = 1;
+	p.y = 1;
+	string user;
+	string date;
+	string text;
 	bool streamig = true;
-	int counter = 0;
+	int timer = 0;
+	int trimer = 0;
 
-	while (streamig) {
+	lcd->lcdSetCursorPosition(p);
+	lcd->lcdClear();
+	update_board(lcd);
+	while (streamig && getNextEventType() != ALLEGRO_EVENT_DISPLAY_CLOSE) {
+		if (getNextEventType()) {
+			user = (tweetList.at(tweetSelect)).getUser();
+			date = (tweetList.at(tweetSelect)).getDate();
+			string joiner = ": - ";
+			string message = user + joiner + (tweetList.at(tweetSelect)).getText() + " -";
+			/*
+			string day = date.substr(date.find(' ',0,2)-1, date.find(' ', 0,3));
+			string month = date.substr(date.find(' ', 0), date.find(' ', 1)+1);
+			string year = date.substr(date.find(' ', 4), date.length());
+			string hh_mm = date.substr(date.find(' ', 2), date.find(':', 1));
+			cout << day+'/'+month+'/'+year+' '+'-'+' '+hh_mm;
+			*/
+			if (Event.type == ALLEGRO_EVENT_KEY_DOWN) {
+				if (Event.keyboard.keycode == ALLEGRO_KEY_RIGHT) {
+					tweetSelect++;
+					trimer = 0;
+				}
+				if (Event.keyboard.keycode == ALLEGRO_KEY_LEFT) {
+					if (tweetSelect != 0) {
+						tweetSelect--;
+						trimer = 0;
+					}
+					else {
+						tweetSelect = 0;
+						trimer = 0;
+					}
+				}
+			}
 
-		if (getNextEventType() == ALLEGRO_EVENT_TIMER) {
-			cout << "hola";
-			streamig = false;
+			if (Event.type == ALLEGRO_EVENT_TIMER) {
+
+				lcd->lcdClear();
+				update_board(lcd);
+
+				p.x = 1;
+				p.y = 1;
+
+				lcd->lcdSetCursorPosition(p);
+				*lcd << (unsigned char*)date.c_str();
+
+				p.x = 1;
+				p.y = 2;
+				lcd->lcdSetCursorPosition(p);
+
+				// escribo autor y texto
+				if (!(timer % 40) && timer != 0) {
+					trimer++;
+					if (trimer > message.length() - 16) {
+						trimer = 0;
+						tweetSelect++;
+					}
+					timer = 0;
+				}
+
+				string message_to_16 = message.substr(trimer);
+				*lcd << (unsigned char*)message_to_16.c_str();
+
+				timer++;
+				update_board(lcd);
+			}
 		}
-	}
-
-	for (auto tweet_ : tweetList)
-	{
-		cout << "Tweets retrieved from Twitter account: " << tweet_.getUser() << endl;
-		cout << tweet_.getUser() << endl;
-		cout << tweet_.getDate() << endl;
-		cout << tweet_.getText() << endl;
-
-		std::cout << "-----------------------------------------" << std::endl;
 	}
 }

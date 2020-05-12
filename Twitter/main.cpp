@@ -21,7 +21,7 @@ int main(void)
 		searchingfortweets = EDA_Client.getTweets();
 
 	}
-	sim->displayTweets(EDA_Client.getTweetList());
+	sim->displayTweets(EDA_Client.getTweetList(), lcd);
 	//EDA_Client.displayTweets();
 
 

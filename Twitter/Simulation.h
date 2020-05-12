@@ -12,8 +12,9 @@
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_ttf.h>
 #include "Tweet.h"
+#include "AllegroLCD.h"
 
-#define FPS    1.0
+#define FPS    40.0
 
 
 class Simulation {
@@ -29,7 +30,7 @@ public:
 	ALLEGRO_TIMER* getTimer();
 	ALLEGRO_EVENT getEvent();
 	int getNextEventType();
-	void displayTweets(vector<Tweet> tweetList);
+	void displayTweets(vector<Tweet> tweetList, BasicLCD* lcd);
 
 private:
 	ALLEGRO_DISPLAY* display;

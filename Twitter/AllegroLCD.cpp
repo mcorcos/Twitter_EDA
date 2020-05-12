@@ -115,6 +115,12 @@ BasicLCD& AllegroLCD::operator<<(const unsigned char c)
 	else if (c == '*') {
 		display_char(c, x, y);
 	}
+	else if (c == '-') {
+		display_char(c, x, y);
+	}
+	else if (c == ':') {
+		display_char(c, x, y);
+	}
 	else if (isAlpha(c) || isNum(c)) {
 		display_char(c, x, y);
 	}
