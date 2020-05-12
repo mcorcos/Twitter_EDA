@@ -1,4 +1,6 @@
 #include <iostream>
+#include <stdlib.h>
+#include <ctype.h>
 #include "Client.h"
 #include "AllegroLCD.h"
 #include "Simulation.h"
@@ -37,9 +39,27 @@ int main(int argc, char **argv)
 
 bool parseInput(int argNum, char *username, char* tweetNumber)
 {
-	/*if (argNum != 3) {
-		bool = false;
+	bool ret = true;
+	int i;
+
+	if (argNum != 3) {
+		ret = false;
 		cout << "Invalid ammount of arguments." << endl;
-	}*/
-	return true;
+	}
+
+	for (i = 0; tweetNumber[i]; i++) {
+		if (!isdigit(tweetNumber[i])) {
+			ret = false;
+			cout << "Invalid number of tweets" << endl;
+		}
+	}
+
+	if (ret) {
+		if (atoi(tweetNumber) > MAXTWEETNUMBER) {
+			ret = false;
+			cout << "Tweet number exceeds max value." << endl;
+		}
+	}
+
+	return ret;
 }
