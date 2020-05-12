@@ -9,29 +9,51 @@ bool parseInput(int argNum, char *username, char* tweetNumber);
 
 int main(int argc, char **argv)
 {
-	bool result=parseInput(argc, argv[1], argv[2]);
+	bool result = true;
+	bool use_default = false;
+
+	if(argc!=2)
+		result=parseInput(argc, argv[1], argv[2]);
+	else use_default = true;
 
 	if (result)
 	{
-		int tweet_count = stoi(argv[2]);
-		string useranme = argv[1];
+		int tweet_count;
+
+		if(!use_default)
+			tweet_count = stoi(argv[2]);
+		else 
+			tweet_count = DEFAULT_TWEET_NUMBER;
+
+		string username = argv[1];
 		Simulation* sim = new Simulation();
 		sim->initialize();
 		BasicLCD* lcd = new AllegroLCD();
 		bool searchingfortweets = true;
 
-		Client* ClientPtr = new Client(useranme, tweet_count);
+		Client* ClientPtr = new Client(username, tweet_count);
 		ClientPtr->getBearerToken();
 
-		while (searchingfortweets)
+		if (ClientPtr->getErrorCode() == ERROR_FREE)
 		{
+			while (searchingfortweets)
+			{
 
-			loading(lcd, 32);
-			searchingfortweets = ClientPtr->getTweets();
+				loading(lcd, 32);
+				searchingfortweets = ClientPtr->getTweets();
 
+			}
 		}
+		else
+		{
+			loading(lcd, 32);
+			ClientPtr->setErrorMessage();
+		}
+
 		sim->displayTweets(ClientPtr, lcd);
-		//EDA_Client.displayTweets();
+
+
+		delete ClientPtr;
 		delete lcd;
 		delete sim;
 	}
@@ -43,23 +65,19 @@ bool parseInput(int argNum, char *username, char* tweetNumber)
 	bool ret = true;
 	int i;
 
-	if (argNum != 3) {
-		ret = false;
-		cout << "Invalid ammount of arguments." << endl;
-	}
-
-	for (i = 0; tweetNumber[i]; i++) {
-		if (!isdigit(tweetNumber[i])) {
-			ret = false;
+	if (argNum == 3) {
+		for (i = 0; tweetNumber[i]; i++) {
+			if (!isdigit(tweetNumber[i])) {
+				ret = false;
+			}
+		}
+		if (!ret)
 			cout << "Invalid number of tweets" << endl;
-		}
 	}
 
-	if (ret) {
-		if (atoi(tweetNumber) > MAXTWEETNUMBER) {
-			ret = false;
-			cout << "Tweet number exceeds max value." << endl;
-		}
+	else {
+		ret = false;
+		cout << "Invalid ammount of arguments - Argumentos should be: name+tweetammount or name" << endl;
 	}
 
 	return ret;

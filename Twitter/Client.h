@@ -10,7 +10,10 @@
 using namespace std;
 
 size_t myCallback(void *contents, size_t size, size_t nmemb, void *userp);
-typedef enum { ERROR_FREE, INVALID_USERNAME, JSON_ERROR, CURL_ERROR, CURL_EASY_ERROR, CURL_MULTI_ERROR } errorCode_n;
+typedef enum { ERROR_FREE, TWEET_NUMBER_ERROR, INVALID_USERNAME, JSON_ERROR, CURL_ERROR, CURL_EASY_ERROR, CURL_MULTI_ERROR } errorCode_n;
+
+#define MAXTWEETNUMBER 1000
+#define DEFAULT_TWEET_NUMBER 20
 
 class Client
 {
@@ -27,7 +30,7 @@ public:
 	void setUser(string user_);
 	void set_numberofTweets(int numberofTweets_);
 	int getvectorsize(void);
-	/*void printNames(list<string> names);*/
+	void setErrorMessage();
 
 private:
 	void setTokenOptions(void);

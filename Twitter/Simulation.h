@@ -19,7 +19,6 @@
 #define SPEED_LOWER_LIMIT 6
 #define SPEED_HIGHER_LIMIT 100
 #define DEFAULT_SPEED 30
-#define MAXTWEETNUMBER 100
 
 string parse_date(std::string usr_date);
 

@@ -35,8 +35,10 @@ Client::Client(string user_, int numberofTweets_)
 		cout << "Invalid username" << endl;
 		errorCode = INVALID_USERNAME;
 	}
-	if (numberofTweets < 0)
+	if (numberofTweets < 0 || numberofTweets > MAXTWEETNUMBER) {
 		cout << "Invalid tweet numbers" << endl;
+		errorCode = TWEET_NUMBER_ERROR;
+	}
 
 }
 
@@ -165,6 +167,7 @@ bool Client::getTweets(void)
 				}
 				cout << "Error de json" << endl;
 				errorCode = JSON_ERROR;
+				tweetList.emplace_back(Tweet(defaultuser, defaultdate, defaulttext));
 				return 0;
 			}
 
@@ -177,17 +180,17 @@ bool Client::getTweets(void)
 				printNames(tweet_text);*/
 
 				tweetList.clear();
-				for (auto element : j)
-				{
-					text_ = element["text"];
-					date_ = element["created_at"];
-					int extended = text_.find("https");
-					text_ = text_.substr(0, extended);
-					text_.append(dots);
-					/*text_ = element["text"].get<string>();
-					date_ = element["created at"].get<string>();*/
-					tweetList.emplace_back(Tweet(user, date_, text_));
-				}
+					for (auto element : j)
+					{
+						text_ = element["text"];
+						date_ = element["created_at"];
+						int extended = text_.find("https");
+						text_ = text_.substr(0, extended);
+						text_.append(dots);
+						/*text_ = element["text"].get<string>();
+						date_ = element["created at"].get<string>();*/
+						tweetList.emplace_back(Tweet(user, date_, text_));
+					}
 				/*cout << "Tweets retrieved from Twitter account: " << user << endl;*/
 			}
 			catch (std::exception& e)
@@ -330,4 +333,9 @@ size_t myCallback(void *contents, size_t size, size_t nmemb, void *userp)
 	return realsize;						//recordar siempre devolver realsize
 }
 
-int Client::getvectorsize(void) { return tweetList.size(); };
+int Client::getvectorsize(void) { return tweetList.size(); }
+void Client::setErrorMessage()
+{
+	tweetList.emplace_back(Tweet(defaultuser, defaultdate, defaulttext));
+}
+;
