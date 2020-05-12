@@ -13,6 +13,7 @@ Simulation::~Simulation() {
 	if (queue) {
 		al_destroy_event_queue(queue);
 	}
+
 	if (timer)
 		al_destroy_timer(timer);
 	if (display)
@@ -150,6 +151,8 @@ void Simulation::dispatch(int type) {
 			speed += 5;
 		}
 		break;
+	case ALLEGRO_KEY_Q:
+		streaming = false;
 	default:
 		break;
 	}
@@ -165,7 +168,7 @@ void Simulation::displayTweets(Client* ClientPtr, BasicLCD* lcd) {
 	string text;
 	string message = "";
 	bool error = false;
-	bool streaming = true;
+
 
 	lcd->lcdClear();
 	update_board(lcd);

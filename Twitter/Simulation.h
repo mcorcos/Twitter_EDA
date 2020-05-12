@@ -50,4 +50,5 @@ private:
 	int tweet_select_upper_bound;
 	int speed = DEFAULT_SPEED;
 	int sequence_counter;
+	bool streaming = true;
 };
