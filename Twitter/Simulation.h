@@ -36,10 +36,9 @@ public:
 	ALLEGRO_TIMER* getTimer();
 	ALLEGRO_EVENT getEvent();
 	void displayTweets(Client* ClientPtr, BasicLCD* lcd);
-	void newUser(void);
-
-private:
 	int getNextEventType();
+private:
+
 	void dispatch(int type);
 	void setLCD(BasicLCD* lcd, int x, int y);
 	ALLEGRO_DISPLAY* display;
@@ -51,4 +50,5 @@ private:
 	int tweet_select_upper_bound;
 	int speed = DEFAULT_SPEED;
 	int sequence_counter;
+	bool streaming = true;
 };
