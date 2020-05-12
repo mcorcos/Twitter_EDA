@@ -157,8 +157,8 @@
     <ClCompile Include="AllegroLCD.cpp" />
     <ClCompile Include="BasicLCD.cpp" />
     <ClCompile Include="Client.cpp" />
-    <ClCompile Include="graphiclcd.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Simulation.cpp" />
     <ClCompile Include="Tweet.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -169,7 +169,7 @@
     <ClInclude Include="AllegroLCD.h" />
     <ClInclude Include="BasicLCD.h" />
     <ClInclude Include="Client.h" />
-    <ClInclude Include="graphiclcd.h" />
+    <ClInclude Include="Simulation.h" />
     <ClInclude Include="Tweet.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

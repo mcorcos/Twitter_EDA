@@ -12,88 +12,16 @@ AllegroLCD::AllegroLCD()
 
 AllegroLCD::~AllegroLCD()
 {
-	if (display)
-		al_destroy_display(display);
-
 	if (lcd_simul)
 		al_destroy_bitmap(lcd_simul);
 
-	if (event_queue) {
-		al_destroy_event_queue(event_queue);
-	}
 	al_shutdown_primitives_addon();
-
-	if (Timer)
-		al_destroy_timer(Timer);
-
 }
 
 bool AllegroLCD::lcdInitOK()
 {
 
-
-
-	if (!al_init()) {        //inicializacion general del allegro
-		fprintf(stderr, "error al inicializar el allegro\n");
-		return false;
-	}
-
-
-	event_queue = al_create_event_queue();       //se inicializa los eventos
-
-	if (!event_queue) {                         //se controla si fallo la init de los eventos
-		fprintf(stderr, "failed to create event_queue!\n");
-		return false;
-	}
-
-
-	if (!al_init_primitives_addon()) {       //se controla si fallo la inicializacion de las primitivas
-		fprintf(stderr, "error al inicializar las primitivas\n");
-		return false;
-	}
-
-	if (!al_init_image_addon()) { // necesario para manejo de imagenes 
-		fprintf(stderr, "failed to initialize image addon !\n");
-		return false;
-	}
-
-	if (!al_init_font_addon()) { // necesario para manejo de fuentes de letras
-		fprintf(stderr, "failed to initialize font addon !\n");
-		return false;
-	}
-
-
-	if (!al_init_ttf_addon()) { // necesario para manejo de fuentes de letras
-		fprintf(stderr, "failed to initialize font addon !\n");
-		return false;
-	}
-
-
-
 	al_set_new_display_flags(ALLEGRO_OPENGL | ALLEGRO_WINDOWED);
-	display = al_create_display(676, 281);
-
-	//se crea el display
-
-	al_register_event_source(event_queue, al_get_display_event_source(display)); //se registra la fuente de los eventos de cierre de display
-
-	if (!display) {//creo display
-		al_shutdown_primitives_addon();      //se destruye la imagen porque ocupa espacio en heap y el programa fallo por otro motivo
-		fprintf(stderr, "failed to create display");
-
-		return false;
-	}
-
-	// creo timer
-	Timer = al_create_timer(1 / FPS);
-	if (!Timer) {
-		return false;
-	}
-
-	// registro timer
-	al_register_event_source(event_queue, al_get_timer_event_source(Timer));
-	// start timer
-	al_start_timer(Timer);
 
 	lcd_simul = al_load_bitmap("lcd.bmp");
 
@@ -184,10 +112,6 @@ BasicLCD& AllegroLCD::operator<<(const unsigned char c)
 
 BasicLCD& AllegroLCD::operator<<(const unsigned char * c)
 {
-	//int x, y, pos;
-	//display_chars((char*)c,x,y);
-	return *this;
-
 	string string = (char*)c, string1, string2;
 	int pos, x, y;
 	pos = cadd - 1;

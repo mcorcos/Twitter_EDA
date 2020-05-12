@@ -12,7 +12,6 @@
 #include <allegro5/allegro_ttf.h>
 #include <string>
 
-#define FPS    60.0
 
 #define WIDTH 676   
 #define HEIGHT 281
@@ -25,20 +24,14 @@
 #define isAlpha(a)  ( ( ('a'<= (a)) && ('z' >= (a)) ) || ( ('A'<= (a)) && ('Z' >= (a)) ) )
 #define isNum(a)     ( ('0'<= (a)) && ('9' >= (a)) )
 
-
-
 #define FT_ok true
 #define FT_err false
-
 
 using namespace std;
 
 void update_board(BasicLCD* lcd);
 void check_lcd(BasicLCD* lcd,int x, int y);
 void loading(BasicLCD* lcd, int dowloadedTwts);
-
-
-
 
 class AllegroLCD : public BasicLCD {
 public:
@@ -59,13 +52,7 @@ public:
 	void display_char(char c,int x , int y);
 	void display_chars(char* c, int x, int y);
 
-
 private:
-
-	ALLEGRO_DISPLAY* display = nullptr;  //punteros que apuntan a un estructuras de allegro, se los apuntan a NULL para controlar errores
-	ALLEGRO_TIMER* Timer;
-	ALLEGRO_EVENT_QUEUE* event_queue;
-	ALLEGRO_EVENT ev;
 
 	ALLEGRO_BITMAP* loading_bitmaps[4];
 	ALLEGRO_BITMAP* al_bitmaps[27];
