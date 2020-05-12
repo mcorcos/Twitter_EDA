@@ -1,5 +1,7 @@
 #include "Client.h"
 #include "iostream"
+#include "boost/locale.hpp"
+
 string text_, date_;
 using json = nlohmann::json;
 
@@ -182,7 +184,7 @@ bool Client::getTweets(void)
 				tweetList.clear();
 					for (auto element : j)
 					{
-						text_ = element["text"];
+						text_ = boost::locale::conv::from_utf<char>(element["text"],"ISO-8859-15");
 						date_ = element["created_at"];
 						int extended = text_.find("https");
 						text_ = text_.substr(0, extended);

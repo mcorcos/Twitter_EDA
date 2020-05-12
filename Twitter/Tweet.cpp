@@ -5,7 +5,7 @@ Tweet::Tweet(string user_, string date_, string text_)
 {
 	user = user_;
 	date = date_;
-	text = text_;
+	text = find_chars(text_);
 }
 
 Tweet::~Tweet()
@@ -30,20 +30,25 @@ string Tweet::getText(void)
 
 
 string find_chars(std::string text) {
-	char con_acento[] = { 'á' ,'é' ,'í','ó','ú' };
-	char sin_acento[] = { 'a' ,'e' ,'i','o','u' };
+	char con_acento[] = { 'á' ,'é' ,'í','ó','ú','ñ' };
+	char sin_acento[] = { 'a' ,'e' ,'i','o','u','n' };
 
 	int found = 0;
 	int i;
 	char c, s;
 
-	for (i = 0; i < 5; i++) {
+	for (i = 0; i < 6; i++) {
 		c = con_acento[i];
 		s = sin_acento[i];
 
+		found = text.find(c);
+
 		while (found != std::string::npos) {
+			
+			text[found] = s;
+
 			found = text.find(c);
-			text.replace(found, found, &s);
+
 		}
 		found = 0;
 	}
