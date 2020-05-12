@@ -120,63 +120,72 @@ string parse_date(std::string usr_date) {
 	return usr_date;
 }
 
+void Simulation::dispatch(int type) {
+
+	switch (type) {
+	case ALLEGRO_KEY_SPACE:
+		trimer = 0;
+		break;
+	case ALLEGRO_KEY_RIGHT:
+		if (tweetSelect < tweet_select_upper_bound) {
+			tweetSelect++;
+		}
+		trimer = 0;
+		break;
+	case ALLEGRO_KEY_LEFT:
+		if (tweetSelect != 0) {
+			tweetSelect--;
+			trimer = 0;
+		}
+		else {
+			tweetSelect = 0;
+			trimer = 0;
+		}
+		break;
+	case ALLEGRO_KEY_UP:
+		if (speed > SPEED_LOWER_LIMIT) {
+			speed -= 5;
+		}
+		break;
+	case ALLEGRO_KEY_DOWN:
+		if (speed < SPEED_HIGHER_LIMIT) {
+			speed += 5;
+		}
+		break;
+	default:
+		break;
+	}
+}
+
 
 void Simulation::displayTweets(vector<Tweet> tweetList, BasicLCD* lcd) {
 
-	int tweetSelect = 0;
-	int speed = 30;
+	tweet_select_upper_bound = tweetList.size();
 	cursorP p;
-	p.x = 1;
-	p.y = 1;
 	string user;
 	string date;
 	string text;
-	bool streamig = true;
-	int timer = 0;
-	int trimer = 0;
+	string message = "";
+	bool streaming = true;
 
-	lcd->lcdSetCursorPosition(p);
 	lcd->lcdClear();
 	update_board(lcd);
-	while (streamig && getNextEventType() != ALLEGRO_EVENT_DISPLAY_CLOSE) {
+	while (streaming) {
 		if (getNextEventType()) {
-			string message = "";
-			if (tweetSelect < tweetList.size()) {
+
+			if (Event.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
+				streaming = false;
+			}
+
+			if (tweetSelect < tweet_select_upper_bound) {
 				user = (tweetList.at(tweetSelect)).getUser();
 				date = parse_date((tweetList.at(tweetSelect)).getDate());
 				message = user + ": - " + (tweetList.at(tweetSelect)).getText() + " -";
 			}
 
+
 			if (Event.type == ALLEGRO_EVENT_KEY_DOWN) {
-				if (Event.keyboard.keycode == ALLEGRO_KEY_SPACE) {
-					trimer = 0;
-				}
-				else if (Event.keyboard.keycode == ALLEGRO_KEY_RIGHT) {
-					if (tweetSelect < tweetList.size()) {
-						tweetSelect++;
-					}
-					trimer = 0;
-				}
-				else if (Event.keyboard.keycode == ALLEGRO_KEY_LEFT) {
-					if (tweetSelect != 0) {
-						tweetSelect--;
-						trimer = 0;
-					}
-					else {
-						tweetSelect = 0;
-						trimer = 0;
-					}
-				}
-				else if (Event.keyboard.keycode == ALLEGRO_KEY_UP) {
-					if (speed > 6) {
-						speed-=5;
-					}
-				}
-				else if (Event.keyboard.keycode == ALLEGRO_KEY_DOWN) {
-					if (speed < 100) {
-						speed+=5;
-					}
-				}
+				dispatch(Event.keyboard.keycode);
 			}
 
 			if (Event.type == ALLEGRO_EVENT_TIMER) {
@@ -184,6 +193,27 @@ void Simulation::displayTweets(vector<Tweet> tweetList, BasicLCD* lcd) {
 				lcd->lcdClear();
 				update_board(lcd);
 
+
+				// escribo autor y texto
+				if (!(sequence_counter % speed) && sequence_counter != 0) {
+					trimer++;
+					if (trimer > message.length() - 16) {
+						trimer = 0;
+						if (tweetSelect < tweet_select_upper_bound) {
+							tweetSelect++;
+						}
+					}
+					sequence_counter = 0;
+				}
+
+				string message_to_16;
+				if (tweetSelect < tweet_select_upper_bound) {
+					message_to_16 = message.substr(trimer);
+				}
+				else {
+					message_to_16 = "No more tweets";
+					date = "";
+				}
 				p.x = 1;
 				p.y = 1;
 
@@ -193,35 +223,9 @@ void Simulation::displayTweets(vector<Tweet> tweetList, BasicLCD* lcd) {
 				p.x = 1;
 				p.y = 2;
 				lcd->lcdSetCursorPosition(p);
-
-				// escribo autor y texto
-				if (!(timer % speed) && timer != 0) {
-					trimer++;
-					if (trimer > message.length() - 16) {
-						trimer = 0;
-						if (tweetSelect < tweetList.size()) {
-							tweetSelect++;
-						}
-					}
-					timer = 0;
-				}
-				string message_to_16;
-				if (tweetSelect < tweetList.size()) {
-					message_to_16 = message.substr(trimer);
-				}
-				else {
-					p.x = 1;
-					p.y = 1;
-					lcd->lcdSetCursorPosition(p);
-					*lcd << (unsigned char*)"";
-					p.x = 2;
-					p.y = 2;
-					lcd->lcdSetCursorPosition(p);
-					message_to_16 = "No more tweets";
-				}
 				*lcd << (unsigned char*)message_to_16.c_str();
 
-				timer++;
+				sequence_counter++;
 				update_board(lcd);
 			}
 		}
