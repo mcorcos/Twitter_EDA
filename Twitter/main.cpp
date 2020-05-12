@@ -13,13 +13,14 @@ int main(int argc, char **argv)
 
 	if (result)
 	{
-		int tweet_count = 10, i = 1;
+		int tweet_count = stoi(argv[2]);
+		string useranme = argv[1];
 		Simulation* sim = new Simulation();
 		sim->initialize();
 		BasicLCD* lcd = new AllegroLCD();
 		bool searchingfortweets = true;
 
-		Client* ClientPtr = new Client("NicoTrozzo", tweet_count);
+		Client* ClientPtr = new Client(useranme, tweet_count);
 		ClientPtr->getBearerToken();
 
 		while (searchingfortweets)
