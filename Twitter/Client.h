@@ -24,7 +24,6 @@ public:
 	void setUser(string user_);
 	void set_numberofTweets(int numberofTweets_);
 	int getvectorsize(void);
-	void displayTweets(void);
 	/*void printNames(list<string> names);*/
 
 private:

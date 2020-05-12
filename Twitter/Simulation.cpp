@@ -5,7 +5,8 @@ Simulation::Simulation(
 	ALLEGRO_DISPLAY* display,
 	ALLEGRO_TIMER* timer,
 	ALLEGRO_EVENT_QUEUE* queue
-): display(display), timer(timer), queue(queue) {}
+): display(display), timer(timer), queue(queue) {
+}
 
 Simulation::~Simulation() {
 	// DESTROY EVERYTHING
@@ -95,7 +96,37 @@ ALLEGRO_TIMER* Simulation::getTimer() {
 	return timer;
 }
 
-ALLEGRO_EVENT Simulation::getEvent() {
+int Simulation::getNextEventType() {
 	if (al_get_next_event(queue, &Event))
-		return Event;
+		return Event.type;
+	else
+		return NULL;
+}
+
+ALLEGRO_EVENT Simulation::getEvent() {
+	return Event;
+}
+
+void Simulation::displayTweets(vector<Tweet> tweetList) {
+
+	bool streamig = true;
+	int counter = 0;
+
+	while (streamig) {
+
+		if (getNextEventType() == ALLEGRO_EVENT_TIMER) {
+			cout << "hola";
+			streamig = false;
+		}
+	}
+
+	for (auto tweet_ : tweetList)
+	{
+		cout << "Tweets retrieved from Twitter account: " << tweet_.getUser() << endl;
+		cout << tweet_.getUser() << endl;
+		cout << tweet_.getDate() << endl;
+		cout << tweet_.getText() << endl;
+
+		std::cout << "-----------------------------------------" << std::endl;
+	}
 }

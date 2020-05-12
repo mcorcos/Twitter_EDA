@@ -31,6 +31,14 @@ bool AllegroLCD::lcdInitOK()
 		return false;
 	}
 
+	espacio = al_load_bitmap("espacio.png");
+
+
+	if (!espacio) {
+		fprintf(stderr, "failed to load image espacio !\n");
+		return false;
+	}
+
 	font = al_load_font("font.ttf", 24, 0);
 
 	if (!font) {
@@ -51,7 +59,6 @@ bool AllegroLCD::lcdInitOK()
 
 	return true;
 }
-
 bool AllegroLCD::lcdGetError()
 {
 	if (result) {
@@ -95,12 +102,23 @@ BasicLCD& AllegroLCD::operator<<(const unsigned char c)
 		x = pos;
 	}
 	if (pos >= 16) {
-		y=1;
+		y = 1;
 	}
 	else {
-		y=0;
+		y = 0;
 	}
-	display_char(c,x,y);
+	if (c == ' ') {
+
+		al_draw_bitmap(espacio, X + x * x_cuadrado, Y + y * y_cuadrado, 0);
+
+	}
+	else if (c == '*') {
+		display_char(c, x, y);
+	}
+	else if (isAlpha(c) || isNum(c)) {
+		display_char(c, x, y);
+	}
+
 	if (lcdMoveCursorRight()) {
 
 	}
@@ -110,8 +128,11 @@ BasicLCD& AllegroLCD::operator<<(const unsigned char c)
 	return *this;
 }
 
-BasicLCD& AllegroLCD::operator<<(const unsigned char * c)
+BasicLCD& AllegroLCD::operator<<(const unsigned char* c)
 {
+	//int x, y, pos;
+	//display_chars((char*)c,x,y);
+
 	string string = (char*)c, string1, string2;
 	int pos, x, y;
 	pos = cadd - 1;
@@ -129,18 +150,19 @@ BasicLCD& AllegroLCD::operator<<(const unsigned char * c)
 	}
 
 
-	if (16 - x >= string.size()) {
+	if ((16 - x) >= string.size()) {
 
 		cadd = cadd += string.size();
-		for (int i = 0;i < string.size();i++) {
+		for (int i = 0; i < string.size(); i++) {
 
-			lcd_chars[y][x] = c[i];
+			lcd_chars[y][i] = c[i];
 
 		}
 	}
 	else {
 
 		string1 = string.substr(0, 16 - x);
+
 		if ((string.size() - (16 - x)) >= 16) {
 			string2 = string.substr(16 - x, 16);
 
@@ -149,18 +171,22 @@ BasicLCD& AllegroLCD::operator<<(const unsigned char * c)
 			string2 = string.substr(16 - x, string.size() - (16 - x));
 		}
 
-		for (int i = 0;i < string1.size();i++) {
 
-			lcd_chars[y][x] = c[i];
+		for (int i = 0; i < string1.size(); i++) {
+
+			lcd_chars[y][i] = c[i];
 		}
-		if (y = 0) {
-			for (int i = 0;i < string2.size();i++) {
 
-				lcd_chars[y + 1][x + string1.size()] = c[i];
+		if (y == 0) {
+			for (int i = 0; i < string2.size(); i++) {
+
+				lcd_chars[y + 1][i] = c[i + string1.size()];
 
 			}
 		}
 		cadd = cadd += string.size();
+
+		if (cadd > 32) { cadd = 1; }
 
 	};
 
@@ -173,9 +199,9 @@ BasicLCD& AllegroLCD::operator<<(const unsigned char * c)
 
 }
 
-void AllegroLCD::display_char(char c,int x, int y)
+void AllegroLCD::display_char(char c, int x, int y)
 {
-	al_draw_text(font, al_color_name("black"), X + x*x_cuadrado, Y + y*y_cuadrado, 0, &c);
+	al_draw_text(font, al_color_name("black"), X + x * x_cuadrado, Y + y * y_cuadrado, 0, &c);
 }
 
 void AllegroLCD::display_chars(char* c, int x, int y)
@@ -194,7 +220,7 @@ bool AllegroLCD::lcdMoveCursorRight() {
 	}
 }
 bool AllegroLCD::lcdMoveCursorLeft() {
-	if (cadd != 0 ) {
+	if (cadd != 0) {
 		cadd -= 1;
 		return true;
 	}
@@ -202,7 +228,7 @@ bool AllegroLCD::lcdMoveCursorLeft() {
 		return false;
 	}
 }
-bool AllegroLCD::lcdClearToEOL() { 
+bool AllegroLCD::lcdClearToEOL() {
 	return true;
 }
 bool AllegroLCD::lcdClear() {
@@ -251,10 +277,25 @@ int AllegroLCD::lcdGetCusorPosition() {
 void loading(BasicLCD* lcd, int downloadedTwts) {
 
 
+	po.x = 1;
+	po.y = 1;
+	lcd->lcdSetCursorPosition(po);
+	*lcd << (unsigned char*)"downloading";
 
-	for (int j = 0;j < downloadedTwts; j++ ) {
+	for (int j = 0; j < downloadedTwts / 2; j++) {
 
-			lcd_chars[1][j] = '0';
+		lcd_chars[1][j] = '0';
+		if (j > 0) {
+			lcd_chars[1][j - 1] = '*';
+		}
+
+		al_rest(0.05);
+		update_board(lcd);
+
+	}
+	for (int j = 0; j < downloadedTwts / 2; j++) {
+
+		lcd_chars[1][j] = ' ';
 
 	}
 	update_board(lcd);
@@ -266,13 +307,13 @@ void update_board(BasicLCD* lcd)
 {
 	int i, j;
 
-	for (i =0; i <= 2; i++) {
+	for (i = 0; i <= 2; i++) {
 
 		for (j = 0; j <= 16; j++) {
-			po.x = j+1;
-			po.y = i+1;
+			po.x = j + 1;
+			po.y = i + 1;
 			lcd->lcdSetCursorPosition(po);
-			check_lcd(lcd,i, j);	
+			check_lcd(lcd, i, j);
 		}
 
 	}
@@ -282,13 +323,5 @@ void update_board(BasicLCD* lcd)
 void check_lcd(BasicLCD* lcd, int x, int y)
 {
 	const char c = lcd_chars[x][y];
-
-	if (isAlpha(c) || isNum(c)) {
-		(*lcd) << c;
-	}
-	else
-	{
-		*lcd << '*';
-	}
+	(*lcd) << c;
 }
-

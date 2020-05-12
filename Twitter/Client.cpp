@@ -216,18 +216,7 @@ void Client::set_numberofTweets(int numberofTweets_)
 		cout << "Invalid tweet ammount" << endl;
 }
 
-void Client::displayTweets(void)
-{
-	for (auto tweet_ : tweetList)
-	{
-		cout << tweet_.getUser() << endl;
-		cout << tweet_.getDate() << endl;
-		cout << tweet_.getText() << endl;
 
-		std::cout << "-----------------------------------------" << std::endl;
-	}
-	cout << "Tweets retrieved from Twitter account: " << user << endl;
-}
 
 //void Client::printNames(list<string> names)
 //{

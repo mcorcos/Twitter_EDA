@@ -1,4 +1,6 @@
 #pragma once
+#include <iostream>
+#include <vector>
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro_primitives.h> 
@@ -9,8 +11,9 @@
 #include <allegro5/allegro_native_dialog.h>
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_ttf.h>
+#include "Tweet.h"
 
-#define FPS    60.0
+#define FPS    1.0
 
 
 class Simulation {
@@ -25,6 +28,8 @@ public:
 	ALLEGRO_DISPLAY* getDisplay();
 	ALLEGRO_TIMER* getTimer();
 	ALLEGRO_EVENT getEvent();
+	int getNextEventType();
+	void displayTweets(vector<Tweet> tweetList);
 
 private:
 	ALLEGRO_DISPLAY* display;

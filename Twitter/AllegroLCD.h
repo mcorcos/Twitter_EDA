@@ -54,9 +54,7 @@ public:
 
 private:
 
-	ALLEGRO_BITMAP* loading_bitmaps[4];
-	ALLEGRO_BITMAP* al_bitmaps[27];
-	ALLEGRO_BITMAP* Num_bitmaps[9];
+	ALLEGRO_BITMAP* espacio = nullptr;
 	ALLEGRO_BITMAP* lcd_simul = nullptr;
 	ALLEGRO_FONT* font = nullptr;
 

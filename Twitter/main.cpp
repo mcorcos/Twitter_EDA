@@ -21,7 +21,8 @@ int main(void)
 		searchingfortweets = EDA_Client.getTweets();
 
 	}
-	EDA_Client.displayTweets();
+	sim->displayTweets(EDA_Client.getTweetList());
+	//EDA_Client.displayTweets();
 
 
 	delete lcd;
