@@ -148,7 +148,10 @@ void Simulation::displayTweets(vector<Tweet> tweetList, BasicLCD* lcd) {
 			}
 
 			if (Event.type == ALLEGRO_EVENT_KEY_DOWN) {
-				if (Event.keyboard.keycode == ALLEGRO_KEY_RIGHT) {
+				if (Event.keyboard.keycode == ALLEGRO_KEY_SPACE) {
+					trimer = 0;
+				}
+				else if (Event.keyboard.keycode == ALLEGRO_KEY_RIGHT) {
 					if (tweetSelect < tweetList.size()) {
 						tweetSelect++;
 					}
