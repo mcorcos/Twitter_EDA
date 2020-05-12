@@ -254,6 +254,7 @@ string parse_date(std::string usr_date) {
 
 	string day, month, year, hs;
 	month.assign(usr_date, 4, 3);
+	month = month_tonum(month);
 	day.assign(usr_date, 8, 2);
 	hs.assign(usr_date, 11, 5);
 	year.assign(usr_date, 28, 2);

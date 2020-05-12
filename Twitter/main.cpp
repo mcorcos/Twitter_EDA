@@ -11,13 +11,13 @@ int main(char argc, char **argv)
 	BasicLCD* lcd = new AllegroLCD();
 	bool searchingfortweets = true;
 
-	Client* ClientPtr= new Client("NicoTrozzo", tweet_count);
+	Client* ClientPtr= new Client("lanacion", tweet_count);
 	ClientPtr->getBearerToken();
 
 		while (searchingfortweets)
 		{
 
-			loading(lcd, 10);
+			loading(lcd, 32);
 			searchingfortweets = ClientPtr->getTweets();
 
 		}
