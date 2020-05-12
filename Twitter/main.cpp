@@ -17,7 +17,10 @@ int main(char argc, char **argv)
 
 		while (searchingfortweets)
 		{
-
+			//if (sim->getNextEventType() == ALLEGRO_EVENT_KEY_DOWN) {
+			//	if (sim->getEvent().keyboard.keycode == ALLEGRO_KEY_Q)
+			//		searchingfortweets = false;				
+			//}
 			loading(lcd, 32);
 			searchingfortweets = ClientPtr->getTweets();
 

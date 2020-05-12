@@ -36,9 +36,9 @@ public:
 	ALLEGRO_TIMER* getTimer();
 	ALLEGRO_EVENT getEvent();
 	void displayTweets(Client* ClientPtr, BasicLCD* lcd);
-
-private:
 	int getNextEventType();
+private:
+
 	void dispatch(int type);
 	void setLCD(BasicLCD* lcd, int x, int y);
 	ALLEGRO_DISPLAY* display;
