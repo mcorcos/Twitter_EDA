@@ -39,7 +39,7 @@ bool AllegroLCD::lcdInitOK()
 		return false;
 	}
 
-	font = al_load_font("font.ttf", 24, 0);
+	font = al_load_font("font.ttf", 34, 0);
 
 	if (!font) {
 		fprintf(stderr, "failed to load font !\n");
@@ -119,6 +119,9 @@ BasicLCD& AllegroLCD::operator<<(const unsigned char c)
 		display_char(c, x, y);
 	}
 	else if (c == ':') {
+		display_char(c, x, y);
+	}
+	else if (c == '.') {
 		display_char(c, x, y);
 	}
 	else if (isAlpha(c) || isNum(c)) {

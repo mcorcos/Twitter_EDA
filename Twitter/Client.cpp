@@ -167,7 +167,7 @@ bool Client::getTweets(void)
 					date_ = element["created_at"];
 					int extended = text_.find("https");
 					text_ = text_.substr(0, extended);
-					text_.append("...");
+					text_.append(".....");
 					/*text_ = element["text"].get<string>();
 					date_ = element["created at"].get<string>();*/
 					tweetList.emplace_back(Tweet(user, date_, text_));

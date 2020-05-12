@@ -120,6 +120,7 @@ string parse_date(std::string usr_date) {
 	return usr_date;
 }
 
+
 void Simulation::displayTweets(vector<Tweet> tweetList, BasicLCD* lcd) {
 
 	int tweetSelect = 0;

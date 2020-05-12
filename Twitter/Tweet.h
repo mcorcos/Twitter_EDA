@@ -2,6 +2,8 @@
 #include <string>
 using namespace std;
 
+string find_chars(std::string text);
+
 class Tweet
 {
 public:
