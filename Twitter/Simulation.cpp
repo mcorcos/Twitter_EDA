@@ -156,9 +156,9 @@ void Simulation::dispatch(int type) {
 }
 
 
-void Simulation::displayTweets(vector<Tweet> tweetList, BasicLCD* lcd) {
+void Simulation::displayTweets(Client* ClientPtr, BasicLCD* lcd) {
 
-	tweet_select_upper_bound = tweetList.size();
+	tweet_select_upper_bound = ClientPtr->getTweetList().size();
 	cursorP p;
 	string user;
 	string date;
@@ -176,9 +176,33 @@ void Simulation::displayTweets(vector<Tweet> tweetList, BasicLCD* lcd) {
 			}
 
 			if (tweetSelect < tweet_select_upper_bound) {
-				user = (tweetList.at(tweetSelect)).getUser();
-				date = parse_date((tweetList.at(tweetSelect)).getDate());
-				message = user + ": - " + (tweetList.at(tweetSelect)).getText() + "-";
+				if (ClientPtr->getErrorCode() == ERROR_FREE)
+				{
+					user = (ClientPtr->getTweetList().at(tweetSelect)).getUser();
+					date = parse_date((ClientPtr->getTweetList().at(tweetSelect)).getDate());
+					message = user + ": - " + (ClientPtr->getTweetList().at(tweetSelect)).getText() + "-";
+				}
+				else 
+					switch (ClientPtr->getErrorCode())
+					{
+					case INVALID_USERNAME:
+						message = "Could not find specified Twitter username...";
+							break;
+					case JSON_ERROR:
+						message = "Unspecified JSON error...";
+							break;
+					case CURL_EASY_ERROR:
+						message = "Could not initiate Curl Easy Handle...";
+						break;
+					case CURL_MULTI_ERROR:
+						message = "Could not initiate Curl Multi Handle...";
+						break;
+					case CURL_ERROR:
+						message = "Cannot start curl...";
+							break;
+					default:
+						break;
+					}
 			}
 
 

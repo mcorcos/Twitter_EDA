@@ -8,12 +8,17 @@ const char* API_SecretKey = "7s8uvgQnJqjJDqA6JsLIFp90FcOaoR5Ic41LWyHOic0Ht3SRJ6"
 const char* Link = "https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=";
 const char* Count = "&count=";
 
+const char* defaultdate = "";
+const char* defaultuser = "fscapolla";
+const char* defaulttext = "the world is all that is the case.";
+
 Client::Client()
 {
 	easyHandler = nullptr;
 	multiHandle = nullptr;
 	numberofTweets = 0;
 	query = Link+ user;
+	errorCode = ERROR_FREE;
 }
 
 Client::Client(string user_, int numberofTweets_)
@@ -23,6 +28,7 @@ Client::Client(string user_, int numberofTweets_)
 	query = Link + user + Count + to_string(numberofTweets);
 	easyHandler = nullptr;
 	multiHandle = nullptr;
+	errorCode = ERROR_FREE;
 
 	if (user.length() < 0) {
 		cout << "Invalid username" << endl;
@@ -151,10 +157,13 @@ bool Client::getTweets(void)
 					if (codes["code"] == 34)
 					{
 						cout << "Usuario no válido" << endl;
+						errorCode = INVALID_USERNAME;
+						tweetList.emplace_back(Tweet(defaultuser, defaultdate, defaulttext));
 						return 0;
 					}
 				}
 				cout << "Error de json" << endl;
+				errorCode = JSON_ERROR;
 				return 0;
 			}
 
@@ -200,6 +209,11 @@ bool Client::getTweets(void)
 vector<Tweet>& Client::getTweetList(void)
 {
 	return tweetList;
+}
+
+errorCode_n Client::getErrorCode(void)
+{
+	return errorCode;
 }
 
 void Client::setUser(string user_)

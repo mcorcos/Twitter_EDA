@@ -10,7 +10,7 @@
 using namespace std;
 
 size_t myCallback(void *contents, size_t size, size_t nmemb, void *userp);
-typedef enum { INVALID_USERNAME, JSON_ERROR, CURL_ERROR, CURL_EASY_ERROR, CURL_MULTI_ERROR } errorCode_n;
+typedef enum { ERROR_FREE, INVALID_USERNAME, JSON_ERROR, CURL_ERROR, CURL_EASY_ERROR, CURL_MULTI_ERROR } errorCode_n;
 
 class Client
 {
@@ -22,6 +22,8 @@ public:
 	bool getBearerToken(void);
 	bool getTweets(void);
 	vector<Tweet>& getTweetList(void);
+	errorCode_n getErrorCode(void);
+
 	void setUser(string user_);
 	void set_numberofTweets(int numberofTweets_);
 	int getvectorsize(void);

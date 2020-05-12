@@ -5,23 +5,23 @@
 
 int main(char argc, char **argv)
 {
-	char* errormessage1 = "invalid input";
 	int tweet_count = 10, i = 1;
 	Simulation* sim = new Simulation();
 	sim->initialize();
 	BasicLCD* lcd = new AllegroLCD();
 	bool searchingfortweets = true;
-	Client EDA_Client("N.;89899", tweet_count);
-		EDA_Client.getBearerToken();
+
+	Client* ClientPtr= new Client("NicoTrozzo", tweet_count);
+	ClientPtr->getBearerToken();
 
 		while (searchingfortweets)
 		{
 
 			loading(lcd, 10);
-			searchingfortweets = EDA_Client.getTweets();
+			searchingfortweets = ClientPtr->getTweets();
 
 		}
-		sim->displayTweets(EDA_Client.getTweetList(), lcd);
+		sim->displayTweets(ClientPtr, lcd);
 		//EDA_Client.displayTweets();
 	delete lcd;
 	delete sim;

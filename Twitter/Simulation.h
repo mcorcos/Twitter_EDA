@@ -34,7 +34,7 @@ public:
 	ALLEGRO_DISPLAY* getDisplay();
 	ALLEGRO_TIMER* getTimer();
 	ALLEGRO_EVENT getEvent();
-	void displayTweets(vector<Tweet> tweetList, BasicLCD* lcd);
+	void displayTweets(Client* ClientPtr, BasicLCD* lcd);
 
 private:
 	int getNextEventType();
