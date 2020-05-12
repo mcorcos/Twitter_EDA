@@ -12,6 +12,7 @@
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_ttf.h>
 #include "Tweet.h"
+#include "Client.h"
 #include "AllegroLCD.h"
 
 #define FPS    60.0

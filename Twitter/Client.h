@@ -10,6 +10,7 @@
 using namespace std;
 
 size_t myCallback(void *contents, size_t size, size_t nmemb, void *userp);
+typedef enum { INVALID_USERNAME, JSON_ERROR, CURL_ERROR, CURL_EASY_ERROR, CURL_MULTI_ERROR } errorCode_n;
 
 class Client
 {
@@ -36,6 +37,7 @@ private:
 	string token, user, query, readString;
 	int numberofTweets;
 	int stillRunning;
+	errorCode_n errorCode;
 
 	vector<Tweet> tweetList;
 };

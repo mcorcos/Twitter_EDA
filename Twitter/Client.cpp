@@ -4,28 +4,30 @@ string text_, date_;
 using json = nlohmann::json;
 
 const char* API_key = "HCB39Q15wIoH61KIkY5faRDf6";
-const char*  API_SecretKey = "7s8uvgQnJqjJDqA6JsLIFp90FcOaoR5Ic41LWyHOic0Ht3SRJ6";
-
-list<string> tweet_text;
+const char* API_SecretKey = "7s8uvgQnJqjJDqA6JsLIFp90FcOaoR5Ic41LWyHOic0Ht3SRJ6";
+const char* Link = "https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=";
+const char* Count = "&count=";
 
 Client::Client()
 {
 	easyHandler = nullptr;
 	multiHandle = nullptr;
 	numberofTweets = 0;
-	query = "https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=" + user;
+	query = Link+ user;
 }
 
 Client::Client(string user_, int numberofTweets_)
 {
 	user = user_;
 	numberofTweets = numberofTweets_;
-	query = "https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=" + user + "&count=" + to_string(numberofTweets);
+	query = Link + user + Count + to_string(numberofTweets);
 	easyHandler = nullptr;
 	multiHandle = nullptr;
 
-	if (user.length() < 0)
+	if (user.length() < 0) {
 		cout << "Invalid username" << endl;
+		errorCode = INVALID_USERNAME;
+	}
 	if (numberofTweets < 0)
 		cout << "Invalid tweet numbers" << endl;
 
@@ -51,6 +53,7 @@ bool Client::getBearerToken(void)
 			cerr << "curl_easy_perform() failed: " << curl_easy_strerror(easyError) << std::endl;
 			//Hacemos un clean up de curl antes de salir.
 			curl_easy_cleanup(easyHandler);
+			errorCode = CURL_EASY_ERROR;
 			return false;
 		}
 
@@ -80,7 +83,8 @@ bool Client::getBearerToken(void)
 	}
 	else
 	{
-		std::cout << "Cannot download tweets. Unable to start cURL" << std::endl;
+		cout << "Cannot download tweets. Unable to start cURL" << endl;
+		errorCode = CURL_ERROR;
 		return false;
 	}
 }
@@ -112,6 +116,7 @@ bool Client::getTweets(void)
 				curl_multi_cleanup(multiHandle);
 				cout << "Error al intentar recuperar tweets." << endl;
 				cerr << "curl_multi_perform() failed: " << curl_multi_strerror(multiError) << endl;
+				errorCode = CURL_MULTI_ERROR;
 				return 0;
 			}
 			processState = true;
@@ -126,6 +131,7 @@ bool Client::getTweets(void)
 				//Hacemos un clean up de curl antes de salir.
 				curl_easy_cleanup(easyHandler);
 				curl_multi_cleanup(multiHandle);
+				errorCode = CURL_EASY_ERROR;
 				return 0;
 			}
 			//Siempre realizamos el cleanup al final
@@ -184,8 +190,10 @@ bool Client::getTweets(void)
 		return processState;
 	}
 	else
+	{
 		std::cout << "Cannot download tweets. Unable to start cURL" << std::endl;
-
+		errorCode = CURL_ERROR;
+	}
 	return 0;
 }
 
@@ -199,7 +207,7 @@ void Client::setUser(string user_)
 	if (user_.length() > 0)
 	{
 		user = user_;
-		query = "https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=" + user + "&count=" + to_string(numberofTweets);
+		query = Link + user + Count + to_string(numberofTweets);
 	}
 	else
 		cout << "Invalid username" << endl;
@@ -210,7 +218,7 @@ void Client::set_numberofTweets(int numberofTweets_)
 	if (numberofTweets_ >= 0)
 	{
 		numberofTweets = numberofTweets_;
-		query = "https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=" + user + "&count=" + to_string(numberofTweets);
+		query = Link + user + Count + to_string(numberofTweets);
 	}
 	else
 		cout << "Invalid tweet ammount" << endl;
