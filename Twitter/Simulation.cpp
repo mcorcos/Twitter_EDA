@@ -164,6 +164,7 @@ void Simulation::displayTweets(Client* ClientPtr, BasicLCD* lcd) {
 	string date;
 	string text;
 	string message = "";
+	bool error = false;
 	bool streaming = true;
 
 	lcd->lcdClear();
@@ -182,15 +183,17 @@ void Simulation::displayTweets(Client* ClientPtr, BasicLCD* lcd) {
 					date = parse_date((ClientPtr->getTweetList().at(tweetSelect)).getDate());
 					message = user + ": - " + (ClientPtr->getTweetList().at(tweetSelect)).getText() + "-";
 				}
-				else 
+				else
+				{
+					error = true;
 					switch (ClientPtr->getErrorCode())
 					{
 					case INVALID_USERNAME:
-						message = "Could not find specified Twitter username...";
-							break;
+						message = "Could not find requested Twitter username................";
+						break;
 					case JSON_ERROR:
 						message = "Unspecified JSON error...";
-							break;
+						break;
 					case CURL_EASY_ERROR:
 						message = "Could not initiate Curl Easy Handle...";
 						break;
@@ -199,10 +202,11 @@ void Simulation::displayTweets(Client* ClientPtr, BasicLCD* lcd) {
 						break;
 					case CURL_ERROR:
 						message = "Cannot start curl...";
-							break;
+						break;
 					default:
 						break;
 					}
+				}
 			}
 
 
@@ -233,8 +237,15 @@ void Simulation::displayTweets(Client* ClientPtr, BasicLCD* lcd) {
 					message_to_16 = message.substr(trimer);
 				}
 				else {
-					message_to_16 = "No more tweets";
-					date = "";
+					if (!error)
+					{
+						message_to_16 = "No more tweets";
+						date = "";
+					}
+					else {
+						message_to_16 = message;
+						tweetSelect--;
+					}
 				}
 
 				setLCD(lcd, 1, 1);

@@ -11,7 +11,7 @@ int main(char argc, char **argv)
 	BasicLCD* lcd = new AllegroLCD();
 	bool searchingfortweets = true;
 
-	Client* ClientPtr= new Client("NicoTrozzo", tweet_count);
+	Client* ClientPtr = new Client("N__..767", tweet_count);
 	ClientPtr->getBearerToken();
 
 		while (searchingfortweets)
