@@ -7,6 +7,7 @@ const char* API_key = "HCB39Q15wIoH61KIkY5faRDf6";
 const char* API_SecretKey = "7s8uvgQnJqjJDqA6JsLIFp90FcOaoR5Ic41LWyHOic0Ht3SRJ6";
 const char* Link = "https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=";
 const char* Count = "&count=";
+const char* dots = "................";
 
 const char* defaultdate = "";
 const char* defaultuser = "fscapolla";
@@ -182,7 +183,7 @@ bool Client::getTweets(void)
 					date_ = element["created_at"];
 					int extended = text_.find("https");
 					text_ = text_.substr(0, extended);
-					text_.append(".....");
+					text_.append(dots);
 					/*text_ = element["text"].get<string>();
 					date_ = element["created at"].get<string>();*/
 					tweetList.emplace_back(Tweet(user, date_, text_));
