@@ -36,6 +36,7 @@ public:
 	ALLEGRO_TIMER* getTimer();
 	ALLEGRO_EVENT getEvent();
 	void displayTweets(Client* ClientPtr, BasicLCD* lcd);
+	void newUser(void);
 
 private:
 	int getNextEventType();

@@ -1,6 +1,8 @@
 #include "Simulation.h"
 #include <string>
 
+const char* endofmsg = "................";
+
 Simulation::Simulation(
 	ALLEGRO_DISPLAY* display,
 	ALLEGRO_TIMER* timer,
@@ -150,6 +152,9 @@ void Simulation::dispatch(int type) {
 			speed += 5;
 		}
 		break;
+	//case ALLEGRO_KEY_N:
+	//	newUser();
+	//	break;
 	default:
 		break;
 	}
@@ -164,7 +169,9 @@ void Simulation::displayTweets(Client* ClientPtr, BasicLCD* lcd) {
 	string date;
 	string text;
 	string message = "";
+	int cursor_pos;
 	bool error = false;
+	bool up = true;
 	bool streaming = true;
 
 	lcd->lcdClear();
@@ -189,19 +196,24 @@ void Simulation::displayTweets(Client* ClientPtr, BasicLCD* lcd) {
 					switch (ClientPtr->getErrorCode())
 					{
 					case INVALID_USERNAME:
-						message = "Could not find requested Twitter username................";
+						message = "Could not find requested Twitter username";
+						message.append(endofmsg);
 						break;
 					case JSON_ERROR:
-						message = "Unspecified JSON error...";
+						message = "Unspecified JSON error";
+						message.append(endofmsg);
 						break;
 					case CURL_EASY_ERROR:
-						message = "Could not initiate Curl Easy Handle...";
+						message = "Could not initiate Curl Easy Handle";
+						message.append(endofmsg);
 						break;
 					case CURL_MULTI_ERROR:
-						message = "Could not initiate Curl Multi Handle...";
+						message = "Could not initiate Curl Multi Handle";
+						message.append(endofmsg);
 						break;
 					case CURL_ERROR:
-						message = "Cannot start curl...";
+						message = "Cannot start curl";
+						message.append(endofmsg);
 						break;
 					default:
 						break;
@@ -222,7 +234,7 @@ void Simulation::displayTweets(Client* ClientPtr, BasicLCD* lcd) {
 
 				// escribo autor y texto
 				if (!(sequence_counter % speed) && sequence_counter != 0) {
-					trimer++;
+						trimer++;
 					if (trimer > message.length() - 16) {
 						trimer = 0;
 						if (tweetSelect < tweet_select_upper_bound) {
@@ -273,3 +285,18 @@ string parse_date(std::string usr_date) {
 
 	return usr_date;
 }
+
+
+//void Simulation::newUser(void)
+//{
+//	bool ret = true;
+//	while (ret)
+//	{
+//		al_wait_for_event(queue, &Event);
+//		switch (Event.type)
+//		{
+//
+//		}
+//
+//	}
+//}

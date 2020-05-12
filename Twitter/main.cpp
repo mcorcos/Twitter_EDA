@@ -23,7 +23,7 @@ int main(int argc, char **argv)
 		while (searchingfortweets)
 		{
 
-			loading(lcd, 10);
+			loading(lcd, 32);
 			searchingfortweets = ClientPtr->getTweets();
 
 		}
